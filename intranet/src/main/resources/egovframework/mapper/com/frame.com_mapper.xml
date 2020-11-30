@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="frame.com">
+    <!-- COM_VRIABL_TMPR : 파라미터용 테이블 인서트  -->
+     <insert id="insertTempTable" parameterType="Map" useGeneratedKeys="false">
+     	<![CDATA[
+			INSERT INTO COM_VRIABL_TMPR
+	            (VRIABL_1_VALUE,  VRIABL_2_VALUE,  VRIABL_3_VALUE,  VRIABL_4_VALUE,  VRIABL_5_VALUE, 
+	             VRIABL_6_VALUE,  VRIABL_7_VALUE,  VRIABL_8_VALUE,  VRIABL_9_VALUE,  VRIABL_10_VALUE,
+	             VRIABL_11_VALUE, VRIABL_12_VALUE, VRIABL_13_VALUE, VRIABL_14_VALUE, VRIABL_15_VALUE, 
+	             VRIABL_16_VALUE, VRIABL_17_VALUE, VRIABL_18_VALUE, VRIABL_19_VALUE, VRIABL_20_VALUE
+			)
+            VALUES 
+            ( 
+	            #{ATTR_1},  #{ATTR_2},  #{ATTR_3},  #{ATTR_4},  #{ATTR_5}, 
+	            #{ATTR_6},  #{ATTR_7},  #{ATTR_8},  #{ATTR_9},  #{ATTR_10},
+	            #{ATTR_11}, #{ATTR_12}, #{ATTR_13}, #{ATTR_14}, #{ATTR_15},
+	            #{ATTR_16}, #{ATTR_17}, #{ATTR_18}, #{ATTR_19}, #{ATTR_20}
+            )
+	  ]]>  
+    </insert>
+</mapper>

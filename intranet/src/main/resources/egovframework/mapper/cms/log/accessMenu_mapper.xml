@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="accessMenuLogMapper">
+	<!-- 접속 로그 저장 -->
+	<insert id="insertAccessMenuLog" parameterType="Map">
+	    <selectKey keyProperty="SN" resultType="int" order="BEFORE">
+	        SELECT MENU_ACCES_LOG_SEQ.NEXTVAL  FROM  DUAL
+	    </selectKey>
+	    INSERT INTO COM_MENU_ACCES_LOG 
+	    ( SN, MENU_NO, ACCES_URL, ACCES_IP, ACCES_DT, LOGIN_ID )
+	    VALUES 
+	    ( #{SN}, #{MENU_NO}, #{ACCES_URL}, #{ACCES_IP}, SYSDATE, #{LOGIN_ID} )
+	</insert>
+	<sql id="accessMenuLogListWehere">
+	    <if test='startDay != "" and endDay != null'>AND ACCES_DT BETWEEN TO_DATE(#{startDay},'YYYY-MM-DD') AND TO_DATE(#{endDay},'YYYY-MM-DD')+1</if>
+		<if test='MENU_SE != "" and MENU_SE != null'>AND MENU_SE = #{MENU_SE}</if>
+	</sql>
+	<!-- 접속 리스트 -->
+	<select id="getAccessMenuLogList" parameterType="Map" resultType="hashMap">
+	    SELECT * FROM (
+	                SELECT ROWNUM RNUM, AA.* FROM (
+	                    SELECT SN, B.MENU_NO, ACCES_URL, ACCES_IP, TO_CHAR(ACCES_DT,'YYYY-MM-DD HH24:MI:SS') ACCES_DT,
+                         ( 
+                        SELECT SUBSTR(PATH,2) PATH FROM (
+                        SELECT
+                        SUBSTR(SYS_CONNECT_BY_PATH(MENU_NM,' > '),3) AS PATH, MENU_NO
+                        FROM COM_MENU A WHERE DELETE_AT = 'N' 
+                        START WITH UPPER_MENU_NO= '0' 
+                        CONNECT BY PRIOR MENU_NO =  UPPER_MENU_NO
+                        ORDER SIBLINGS BY  SORT_ORDR  DESC, MENU_NO DESC 
+                        ) WHERE MENU_NO = B.MENU_NO
+                        ) PATH
+		    FROM
+            (
+            SELECT  SN, MENU_NO, ACCES_URL, ACCES_IP, ACCES_DT FROM COM_MENU_ACCES_LOG
+            UNION ALL
+            SELECT  SN, MENU_NO, ACCES_URL, ACCES_IP, ACCES_DT FROM COM_MENU_ACCES_LOG_BACK
+            ) 
+            B , COM_MENU C
+		    WHERE B.MENU_NO = C.MENU_NO 
+	                    <include refid="accessMenuLogListWehere"/>
+	                    ORDER BY SN DESC
+	                ) AA
+	            )
+	    WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+	<!-- 접속 카운트 -->
+	<select id="getAccessMenuLogCount" parameterType="Map" resultType="int">
+	    SELECT COUNT(*) CNT
+	    FROM (SELECT  SN, MENU_NO, ACCES_URL, ACCES_IP, ACCES_DT FROM COM_MENU_ACCES_LOG
+              UNION ALL
+              SELECT  SN, MENU_NO, ACCES_URL, ACCES_IP, ACCES_DT FROM COM_MENU_ACCES_LOG_BACK) B , COM_MENU C
+        WHERE B.MENU_NO = C.MENU_NO
+	    <include refid="accessMenuLogListWehere"/>
+	</select>
+</mapper>

@@ -1,0 +1,877 @@
+﻿SET DEFINE OFF;
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (36, 6, '010', '010', 1, 
+    'Y', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (37, 6, '011', '011', 2, 
+    'Y', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (38, 6, '016', '016', 3, 
+    'Y', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (39, 6, '017', '017', 4, 
+    'Y', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (18, 5, '02', '서울', 1, 
+    'Y', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (19, 5, '031', '경기', 2, 
+    'Y', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (20, 5, '032', '인천', 3, 
+    'Y', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (40, 6, '018', '018', 5, 
+    'Y', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (41, 6, '019', '019', 6, 
+    'Y', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/29/2016 10:49:39', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (42, 7, 'e001', 'naver.com', 1, 
+    'Y', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (21, 5, '033', '강원', 4, 
+    'Y', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (22, 5, '041', '충남', 5, 
+    'Y', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (23, 5, '042', '대전', 6, 
+    'Y', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (24, 5, '043', '충북', 7, 
+    'Y', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (25, 5, '044', '세종', 8, 
+    'Y', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (26, 5, '051', '부산', 9, 
+    'Y', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (27, 5, '052', '울산', 10, 
+    'Y', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (28, 5, '053', '대구', 11, 
+    'Y', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (29, 5, '054', '경북', 12, 
+    'Y', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (30, 5, '055', '경남', 13, 
+    'Y', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (31, 5, '061', '전남', 14, 
+    'Y', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (32, 5, '062', '광주', 15, 
+    'Y', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (33, 5, '063', '전북', 16, 
+    'Y', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (34, 5, '064', '제주', 17, 
+    'Y', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (35, 5, '070', '070', 18, 
+    'Y', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (43, 7, 'e002', 'nate.com', 2, 
+    'Y', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (44, 7, 'e003', 'gmail.com', 3, 
+    'Y', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (45, 7, 'e004', 'hotmail.com', 4, 
+    'Y', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (46, 7, 'e005', 'hanmail.net', 5, 
+    'Y', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (47, 7, 'e006', 'paran.com', 6, 
+    'Y', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (48, 7, 'e007', 'dreamwiz.com', 7, 
+    'Y', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (49, 7, 'e008', 'korea.com', 8, 
+    'Y', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/02/2016 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (3, 1, '0002', '게시판구분', 2, 
+    'Y', TO_DATE('03/16/2018 13:37:35', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('03/16/2018 13:37:35', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (4, 1, '0003', '민원게시판 상태', 3, 
+    'Y', TO_DATE('03/16/2018 13:37:52', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('03/16/2018 13:37:52', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (5, 1, '0004', '전화번호 앞자리', 4, 
+    'Y', TO_DATE('03/16/2018 13:38:09', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('03/16/2018 13:38:09', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (6, 1, '0005', '핸드폰 앞자리', 5, 
+    'Y', TO_DATE('03/16/2018 13:38:18', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('03/16/2018 13:46:26', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (7, 1, '0006', '이메일', 6, 
+    'Y', TO_DATE('03/16/2018 13:46:51', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('03/16/2018 13:46:51', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (8, 2, 'D', '디렉토리', 1, 
+    'Y', TO_DATE('03/16/2018 13:47:25', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 13:34:43', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (1, 0, '0001', '시스템 공통', 1, 
+    'Y', TO_DATE('03/16/2018 13:36:47', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('03/16/2018 13:36:47', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (2, 1, '0001', '메뉴타입', 1, 
+    'Y', TO_DATE('03/16/2018 13:37:22', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('11/22/2018 15:32:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (9, 2, 'L', '링크', 2, 
+    'Y', TO_DATE('03/16/2018 13:47:33', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('03/16/2018 13:47:33', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (10, 2, 'H', '컨텐츠', 3, 
+    'Y', TO_DATE('03/16/2018 13:47:43', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('03/16/2018 13:47:43', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (11, 2, 'B', '게시판', 4, 
+    'Y', TO_DATE('03/16/2018 13:47:52', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('03/16/2018 13:47:52', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (12, 3, 'C', '일반게시판', 1, 
+    'Y', TO_DATE('03/16/2018 13:48:24', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('03/16/2018 13:48:24', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (13, 3, 'M', '민원게시판', 2, 
+    'Y', TO_DATE('03/16/2018 13:48:32', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('03/16/2018 13:48:32', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (14, 3, 'P', '포토게시판', 3, 
+    'Y', TO_DATE('03/16/2018 13:48:39', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (15, 4, 'R', '접수', 1, 
+    'Y', TO_DATE('03/16/2018 13:49:11', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('03/16/2018 13:49:11', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (16, 4, 'P', '처리중', 2, 
+    'Y', TO_DATE('03/16/2018 13:49:18', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('03/16/2018 13:49:18', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (17, 4, 'C', '완료', 3, 
+    'Y', TO_DATE('03/16/2018 13:49:23', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('03/16/2018 13:49:23', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (50, 0, '0002', '권한 구분', 2, 
+    'Y', TO_DATE('03/16/2018 13:56:34', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('03/16/2018 13:56:34', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (53, 1, '0007', '회원상태', 7, 
+    'Y', TO_DATE('07/05/2018 09:11:36', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('07/05/2018 09:11:36', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (54, 53, 'Y', '승인', 1, 
+    'Y', TO_DATE('07/05/2018 09:12:58', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('07/05/2018 09:12:58', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (55, 53, 'C', '승인대기', 2, 
+    'Y', TO_DATE('07/05/2018 09:13:11', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('07/05/2018 09:13:11', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (56, 53, 'N', '삭제', 3, 
+    'Y', TO_DATE('07/05/2018 09:13:21', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('07/05/2018 09:13:21', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (90, 89, 'U0001', '음용', 1, 
+    'Y', TO_DATE('08/28/2018 09:49:12', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:49:12', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (59, 58, 'K000', '매몰축종', 1, 
+    'Y', TO_DATE('08/28/2018 09:43:58', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:43:58', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (60, 59, 'K0001', '개', 1, 
+    'Y', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (61, 59, 'K0002', '공작', 2, 
+    'Y', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (62, 59, 'K0003', '닭', 3, 
+    'Y', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (63, 59, 'K0004', '닭알', 4, 
+    'Y', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (64, 59, 'K0005', '돼지', 5, 
+    'Y', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (65, 59, 'K0006', '멧돼지', 6, 
+    'Y', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (66, 59, 'K0007', '면양', 7, 
+    'Y', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (67, 59, 'K0008', '사슴', 8, 
+    'Y', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (68, 59, 'K0009', '산란계', 9, 
+    'Y', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (69, 59, 'K0010', '산양', 10, 
+    'Y', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (70, 59, 'K0011', '새끼오리알', 11, 
+    'Y', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (71, 59, 'K0012', '소', 12, 
+    'Y', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (72, 59, 'K0013', '염소', 13, 
+    'Y', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (73, 59, 'K0014', '오리', 14, 
+    'Y', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (74, 59, 'K0015', '육계', 15, 
+    'Y', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (75, 59, 'K0016', '육용오리', 16, 
+    'Y', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (76, 59, 'K0017', '육우', 17, 
+    'Y', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (77, 59, 'K0018', '젖소', 18, 
+    'Y', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (78, 59, 'K0019', '종오리', 19, 
+    'Y', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (79, 59, 'K0020', '토끼', 20, 
+    'Y', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (80, 59, 'K0021', '한우', 21, 
+    'Y', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (81, 59, 'K0022', '한육우', 22, 
+    'Y', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (82, 59, 'K0023', '흑돼지', 23, 
+    'Y', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (83, 59, 'K0024', '흑염소', 24, 
+    'Y', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (84, 59, 'K0025', '기타', 25, 
+    'Y', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (85, 59, 'K0099', '복합축종', 26, 
+    'Y', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (86, 59, 'K0026', '청둥오리', 27, 
+    'Y', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (87, 59, 'K0027', '메추리', 28, 
+    'Y', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (88, 59, 'K0028', '기러기', 29, 
+    'Y', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:47:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (89, 58, 'U000', '이용용도', 2, 
+    'Y', TO_DATE('08/28/2018 09:48:28', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:48:28', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (91, 89, 'U0002', '생활', 2, 
+    'Y', TO_DATE('08/28/2018 09:49:12', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:49:12', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (92, 89, 'U0003', '농·어업', 3, 
+    'Y', TO_DATE('08/28/2018 09:49:12', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:49:12', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (93, 89, 'U0004', '공업', 4, 
+    'Y', TO_DATE('08/28/2018 09:49:12', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:49:12', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (94, 92, 'U0301', '농·어업-농어업', 1, 
+    'Y', TO_DATE('08/28/2018 09:49:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:49:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (95, 92, 'U0302', '농·어업-농업', 2, 
+    'Y', TO_DATE('08/28/2018 09:49:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:49:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (96, 92, 'U0303', '농·어업-어업', 3, 
+    'Y', TO_DATE('08/28/2018 09:49:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:49:59', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (97, 58, 'P000', '이용인구단위', 3, 
+    'Y', TO_DATE('08/28/2018 09:50:34', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:50:34', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (98, 97, 'P0001', '명', 1, 
+    'Y', TO_DATE('08/28/2018 09:50:58', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:50:58', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (99, 97, 'P0002', '세대', 2, 
+    'Y', TO_DATE('08/28/2018 09:50:58', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:50:58', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (114, 50, '0000', '시스템관리자', 1, 
+    'Y', TO_DATE('09/19/2018 09:43:52', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('09/19/2018 09:44:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (124, 123, '01', '원수', 1, 
+    'Y', TO_DATE('10/11/2018 19:35:58', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (125, 123, '02', '제품수', 2, 
+    'Y', TO_DATE('10/11/2018 19:35:58', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (126, 120, 'DW02', '업체 유형', 2, 
+    'Y', TO_DATE('10/11/2018 19:35:58', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (127, 126, 'A', '제조업체', 1, 
+    'Y', TO_DATE('10/11/2018 19:35:58', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (128, 126, 'B', '유통업체', 2, 
+    'Y', TO_DATE('10/11/2018 19:35:58', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (129, 126, 'C', '수입판매업체', 3, 
+    'Y', TO_DATE('10/11/2018 19:35:58', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (130, 120, 'DW03', '원수 종류', 3, 
+    'Y', TO_DATE('10/11/2018 19:35:58', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (123, 120, 'DW01', '검사 구분 코드', 1, 
+    'Y', TO_DATE('10/11/2018 19:35:58', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (198, 197, '01', '업무문의 : 032-560-8375 시스템장애 문의 : 032-560-8379', 1, 
+    'Y', TO_DATE('10/15/2018 11:22:27', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('10/15/2018 11:42:28', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (144, 120, 'DW05', '검출코드', 5, 
+    'Y', TO_DATE('10/16/2018 15:26:45', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (145, 144, '-9988', 'ND', 1, 
+    'Y', TO_DATE('10/16/2018 15:26:45', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (146, 144, '-9997', '검출', 2, 
+    'Y', TO_DATE('10/16/2018 15:26:45', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (147, 144, '-9999', '미검출', 3, 
+    'Y', TO_DATE('10/16/2018 15:26:45', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (148, 120, 'DW06', '검사기관', 6, 
+    'Y', TO_DATE('10/16/2018 15:26:46', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (149, 148, '6110163', '서울특별시 보건환경연구원', 1, 
+    'Y', TO_DATE('10/16/2018 15:26:46', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (150, 148, '6260088', '부산광역시 보건환경연구원', 2, 
+    'Y', TO_DATE('10/16/2018 15:26:46', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (151, 148, '6270103', '대구광역시 보건환경연구원', 3, 
+    'Y', TO_DATE('10/16/2018 15:26:46', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (152, 148, '6280131', '인천광역시 보건환경연구원', 4, 
+    'Y', TO_DATE('10/16/2018 15:26:46', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (153, 148, '6290063', '광주광역시 보건환경연구원', 5, 
+    'Y', TO_DATE('10/16/2018 15:26:46', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (154, 148, '6300122', '대전광역시 보건환경연구원', 6, 
+    'Y', TO_DATE('10/16/2018 15:26:46', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (155, 148, '6310147', '울산광역시 보건환경연구원', 7, 
+    'Y', TO_DATE('10/16/2018 15:26:46', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (156, 148, '6410578', '경기도 보건환경연구원', 8, 
+    'Y', TO_DATE('10/16/2018 15:26:46', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (157, 148, '6420073', '강원도 보건환경연구원', 9, 
+    'Y', TO_DATE('10/16/2018 15:26:46', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (158, 148, '6430067', '충청북도 보건환경연구원', 10, 
+    'Y', TO_DATE('10/16/2018 15:26:46', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (159, 148, '6440071', '충청남도 보건환경연구원', 11, 
+    'Y', TO_DATE('10/16/2018 15:26:46', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (160, 148, '6450600', '전라북도 보건환경연구원', 12, 
+    'Y', TO_DATE('10/16/2018 15:26:46', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (161, 148, '6460092', '전라남도 보건환경연구원', 13, 
+    'Y', TO_DATE('10/16/2018 15:26:46', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (162, 148, '6470163', '경상북도 보건환경연구원', 14, 
+    'Y', TO_DATE('10/16/2018 15:26:46', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (163, 148, '6480078', '경상남도 보건환경연구원', 15, 
+    'Y', TO_DATE('10/16/2018 15:26:46', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (164, 148, '6500447', '제주도 보건환경연구원', 16, 
+    'Y', TO_DATE('10/16/2018 15:26:46', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (165, 120, 'DW07', '처리상태', 7, 
+    'Y', TO_DATE('10/16/2018 16:03:23', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (166, 165, 'P001', '처리전', 1, 
+    'Y', TO_DATE('10/16/2018 16:03:23', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (167, 165, 'P002', '처리중', 2, 
+    'Y', TO_DATE('10/16/2018 16:03:23', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (168, 165, 'P003', '완료', 3, 
+    'Y', TO_DATE('10/16/2018 16:03:23', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (169, 165, 'P004', '오류', 4, 
+    'Y', TO_DATE('10/16/2018 16:03:23', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (170, 120, 'DW08', '운영상태', 8, 
+    'Y', TO_DATE('10/18/2018 10:39:53', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (171, 170, '1', '운영중', 1, 
+    'Y', TO_DATE('10/18/2018 10:39:53', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (172, 170, '2', '휴업', 2, 
+    'Y', TO_DATE('10/18/2018 10:39:53', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (173, 170, '3', '폐업', 3, 
+    'Y', TO_DATE('10/18/2018 10:39:53', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (174, 120, 'DW09', '항목그룹', 9, 
+    'Y', TO_DATE('10/18/2018 16:39:54', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (175, 174, '1', '미생물', 1, 
+    'Y', TO_DATE('10/18/2018 16:39:54', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (176, 174, '2', '건강상 유해영향 무기물질', 2, 
+    'Y', TO_DATE('10/18/2018 16:39:54', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (177, 174, '3', '건강상 유해영향 유기물질', 3, 
+    'Y', TO_DATE('10/18/2018 16:39:54', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (178, 174, '4', '심미적 영향물질', 4, 
+    'Y', TO_DATE('10/18/2018 16:39:54', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (179, 120, 'DW10', '제품 구분', 10, 
+    'Y', TO_DATE('10/24/2018 13:18:26', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (180, 179, '01', '국내', 1, 
+    'Y', TO_DATE('10/24/2018 13:18:26', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (181, 179, '02', '국외', 2, 
+    'Y', TO_DATE('10/24/2018 13:18:26', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (182, 120, 'DW11', '변경 유형', 11, 
+    'Y', TO_DATE('10/24/2018 16:09:15', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (183, 182, 'C', '생성', 1, 
+    'Y', TO_DATE('10/24/2018 16:09:15', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (184, 182, 'U', '변경', 2, 
+    'Y', TO_DATE('10/24/2018 16:09:15', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (185, 182, 'D', '삭제', 3, 
+    'Y', TO_DATE('10/24/2018 16:09:15', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (203, 1, '0009', '에러페이지 하단 전화번호', 9, 
+    'Y', TO_DATE('10/26/2018 14:54:20', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('10/26/2018 14:54:20', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (204, 203, '01', '국립환경과학원 LCY과 032) 560-8379, 7926', 1, 
+    'Y', TO_DATE('10/26/2018 14:54:47', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('10/26/2018 14:54:47', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (186, 120, 'DW12', '반기', 12, 
+    'Y', TO_DATE('10/26/2018 17:19:15', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (187, 186, '01', '상반기', 1, 
+    'Y', TO_DATE('10/26/2018 17:19:15', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (188, 186, '02', '하반기', 2, 
+    'Y', TO_DATE('10/26/2018 17:19:15', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (189, 120, 'DW13', '분기', 13, 
+    'Y', TO_DATE('10/26/2018 17:19:15', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (190, 189, '01', '1분기', 1, 
+    'Y', TO_DATE('10/26/2018 17:19:15', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (191, 189, '02', '2분기', 2, 
+    'Y', TO_DATE('10/26/2018 17:19:15', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (192, 189, '03', '3분기', 3, 
+    'Y', TO_DATE('10/26/2018 17:19:15', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (135, 120, 'DW04', '단위', 4, 
+    'Y', TO_DATE('10/15/2018 10:42:36', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (136, 135, 'U001', 'CFU/mL', 1, 
+    'Y', TO_DATE('10/15/2018 10:42:36', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (137, 135, 'U002', 'ND/250mL', 2, 
+    'Y', TO_DATE('10/15/2018 10:42:36', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (138, 135, 'U003', 'ND/50mL', 3, 
+    'Y', TO_DATE('10/15/2018 10:42:36', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (139, 135, 'U004', '㎎/L', 4, 
+    'Y', TO_DATE('10/15/2018 10:42:36', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (140, 135, 'U005', 'ND', 5, 
+    'Y', TO_DATE('10/15/2018 10:42:36', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (141, 135, 'U006', '도', 6, 
+    'Y', TO_DATE('10/15/2018 10:42:36', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (142, 135, 'U007', '농도', 7, 
+    'Y', TO_DATE('10/15/2018 10:42:36', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (143, 135, 'U008', 'NTU', 8, 
+    'Y', TO_DATE('10/15/2018 10:42:36', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (197, 1, '0008', '하단 전화번호', 8, 
+    'Y', TO_DATE('10/15/2018 11:22:05', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('10/15/2018 11:22:05', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (199, 197, '02', '장애신고/사용문의 국립환경과학원 LCY연구과', 2, 
+    'Y', TO_DATE('10/15/2018 11:23:44', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('10/15/2018 11:42:37', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (200, 197, '03', 'TEL : 032-560-8375 | EMAIL : jungdh93@korea.kr', 3, 
+    'Y', TO_DATE('10/15/2018 11:24:00', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('10/15/2018 11:42:44', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (193, 189, '04', '4분기', 4, 
+    'Y', TO_DATE('10/26/2018 17:19:15', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (131, 130, '1', '지하수', 1, 
+    'Y', TO_DATE('11/09/2018 10:35:18', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (132, 130, '2', '용천수', 2, 
+    'Y', TO_DATE('11/09/2018 10:35:18', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (133, 130, '3', '기타', 3, 
+    'Y', TO_DATE('11/09/2018 10:35:18', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGER_ID)
+ Values
+   (134, 148, '9999999', '기타', 17, 
+    'Y', TO_DATE('11/09/2018 10:35:18', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+ Values
+   (100, 97, 'P0003', '가구', 3, 
+    'Y', TO_DATE('08/28/2018 09:50:58', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin', TO_DATE('08/28/2018 09:50:58', 'MM/DD/YYYY HH24:MI:SS'), 'sgis_admin');
+Insert into COM_CODE
+   (CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID)
+ Values
+   (205, 50, '9999', '방문자', 2, 
+    'N', TO_DATE('01/24/2019 11:39:40', 'MM/DD/YYYY HH24:MI:SS'), 'admin');
+COMMIT;

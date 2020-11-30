@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="statMapper">
+	  <!-- 접속 통계 -->
+	  <select id="getAccessStatList" parameterType="Map" resultType="hashMap">
+		    <!--일별  접속 통계 -->
+		    <if test='STAT_TYP =="D"'>
+			    SELECT TO_NUMBER(SUBSTR(AA.ILJA,7))||'일' ILJA, COUNT(BB.ACCES_DT) TOT_CNT FROM
+		            (SELECT TO_CHAR(TO_DATE(#{YY}||#{MM}||TO_CHAR(ROWNUM),'YYYYMMDD'),'YYYYMMDD') ILJA
+		          ,CEIL((TO_NUMBER(SUBSTRB(TO_CHAR(TO_DATE(#{YY}||#{MM}||TO_CHAR(ROWNUM),'YYYYMMDD'),'YYYYMMDD'), -2, 2)) + 7
+		                            - TO_NUMBER(TO_CHAR(TO_DATE(TO_CHAR(TO_DATE(#{YY}||#{MM}||TO_CHAR(ROWNUM),'YYYYMMDD'),'YYYYMMDD'),'YYYYMMDD'),'D')))/7) AS JUCHA
+		          FROM   ALL_OBJECTS
+		          WHERE  ROWNUM &lt;= TO_NUMBER(TO_CHAR(LAST_DAY(TO_DATE(#{YY}||#{MM},'YYYYMM')),'DD')) AND    ROWNUM > 0) AA,
+		        (SELECT ACCES_IP , ACCES_DT FROM(
+		        SELECT ACCES_IP, TO_CHAR(ACCES_DT,'YYYYMMDD')ACCES_DT FROM 
+                (SELECT SN, ACCES_SE, ACCES_CN, ACCES_DT, LOGIN_ID, ACCES_IP FROM COM_ACCES_LOG
+                UNION ALL
+                SELECT SN, ACCES_SE, ACCES_CN, ACCES_DT, LOGIN_ID, ACCES_IP FROM COM_ACCES_LOG_BACK)
+		        WHERE  ACCES_DT BETWEEN TO_DATE(#{YY}||#{MM}||'01','YYYYMMDD') AND ADD_MONTHS(TO_DATE(#{YY}||#{MM}||'01','YYYYMMDD'), 1)
+		        )GROUP BY ACCES_IP , ACCES_DT 
+		        )BB
+		        WHERE AA.ILJA = BB.ACCES_DT(+)
+		        GROUP BY AA.ILJA
+		        ORDER BY TO_NUMBER(SUBSTR(AA.ILJA,7))
+	        </if>
+	        <!--월별  접속 통계 -->
+	        <if test='STAT_TYP =="M"'>
+		         SELECT  TO_NUMBER(SUBSTR(AA.ILJA,6))||'월' ILJA, NVL(BB.TOT_CNT,0) TOT_CNT FROM
+		        (SELECT #{YY}||'-'||LPAD(ROWNUM,2,0) AS ILJA FROM ALL_OBJECTS   WHERE ROWNUM &lt;13) AA,
+		        (
+		        SELECT SUBSTR(ACCES_DT, 1, 4)||'-'||SUBSTR(ACCES_DT,5, 2)  AS ILJA, COUNT(*) TOT_CNT FROM (
+		        SELECT ACCES_IP , ACCES_DT FROM(
+		        SELECT ACCES_IP, TO_CHAR(ACCES_DT,'YYYYMMDD') ACCES_DT FROM 
+                (SELECT SN, ACCES_SE, ACCES_CN, ACCES_DT, LOGIN_ID, ACCES_IP FROM COM_ACCES_LOG
+                UNION ALL
+                SELECT SN, ACCES_SE, ACCES_CN, ACCES_DT, LOGIN_ID, ACCES_IP FROM COM_ACCES_LOG_BACK)
+		        WHERE  ACCES_DT BETWEEN TO_DATE(#{YY}||'0101','YYYYMMDD') AND ADD_MONTHS(TO_DATE(#{YY}||'0101','YYYYMMDD'), 12)
+		        )GROUP BY ACCES_IP,ACCES_DT
+		        )
+		        GROUP BY SUBSTR(ACCES_DT, 1, 4)||'-'||SUBSTR(ACCES_DT,5, 2)
+		        )BB
+		        WHERE AA.ILJA = BB.ILJA(+)
+		        ORDER BY AA.ILJA
+	        </if>
+	        <!--주별  접속 통계 -->
+	        <if test='STAT_TYP =="W"'>
+		        SELECT JUCHA||'주' AS ILJA, COUNT(BB.ACCES_DT) TOT_CNT FROM
+		            (SELECT TO_CHAR(TO_DATE(#{YY}||#{MM}||TO_CHAR(ROWNUM),'YYYYMMDD'),'YYYYMMDD') ILJA
+		          ,CEIL((TO_NUMBER(SUBSTRB(TO_CHAR(TO_DATE(#{YY}||#{MM}||TO_CHAR(ROWNUM),'YYYYMMDD'),'YYYYMMDD'), -2, 2)) + 7
+		                            - TO_NUMBER(TO_CHAR(TO_DATE(TO_CHAR(TO_DATE(#{YY}||#{MM}||TO_CHAR(ROWNUM),'YYYYMMDD'),'YYYYMMDD'),'YYYYMMDD'),'D')))/7) AS JUCHA
+		          FROM   ALL_OBJECTS
+		          WHERE  ROWNUM &lt;= TO_NUMBER(TO_CHAR(LAST_DAY(TO_DATE(#{YY}||#{MM},'YYYYMM')),'DD')) AND    ROWNUM > 0) AA,
+		        (SELECT ACCES_IP , ACCES_DT FROM(
+		        SELECT ACCES_IP, TO_CHAR(ACCES_DT,'YYYYMMDD') ACCES_DT FROM 
+                (SELECT SN, ACCES_SE, ACCES_CN, ACCES_DT, LOGIN_ID, ACCES_IP FROM COM_ACCES_LOG
+                UNION ALL
+                SELECT SN, ACCES_SE, ACCES_CN, ACCES_DT, LOGIN_ID, ACCES_IP FROM COM_ACCES_LOG_BACK)
+		        WHERE  ACCES_DT BETWEEN TO_DATE(#{YY}||#{MM}||'01','YYYYMMDD') AND ADD_MONTHS(TO_DATE(#{YY}||#{MM}||'01','YYYYMMDD'), 1)
+		        )GROUP BY ACCES_IP , ACCES_DT
+		        )BB
+		        WHERE AA.ILJA = BB.ACCES_DT(+)
+		        GROUP BY AA.JUCHA
+		        ORDER BY JUCHA
+			</if>
+	</select>
+  
+	  <!-- 메뉴별 접속 통계 -->
+	  <select id="getAccessMenuStatList" parameterType="Map" resultType="hashMap">    
+			SELECT   LEVEL, A.* , 
+            ( DECODE(CNTNTS_TY,'D','',(SELECT COUNT(*) FROM (SELECT  SN, MENU_NO, ACCES_URL, ACCES_IP, ACCES_DT FROM COM_MENU_ACCES_LOG
+                                                            UNION ALL
+                                                            SELECT  SN, MENU_NO, ACCES_URL, ACCES_IP, ACCES_DT FROM COM_MENU_ACCES_LOG_BACK
+                                                            ) B WHERE A.MENU_NO = B.MENU_NO 
+                   <if test='STAT_TYP =="D"'>
+                       AND B.ACCES_DT BETWEEN TO_DATE(#{DT_FROM}) AND TO_DATE(#{DT_FROM}) + 1 
+                   </if>
+                   <if test='STAT_TYP =="M"'>
+                       AND B.ACCES_DT BETWEEN TO_DATE(#{DT_FROM}) AND ADD_MONTHS(TO_DATE(#{DT_FROM}), 1)
+                   </if>
+                   <if test='STAT_TYP =="Y"'>
+                       AND B.ACCES_DT BETWEEN TO_DATE(#{DT_FROM}) AND ADD_MONTHS(TO_DATE(#{DT_FROM}), 12)
+                   </if>
+            ))) TOT_CNT,
+            SUBSTR(SYS_CONNECT_BY_PATH(MENU_NM,' > '),3) AS PATH
+            FROM   COM_MENU A
+            WHERE   DELETE_AT = 'N'
+            CONNECT BY   PRIOR MENU_NO = UPPER_MENU_NO AND DELETE_AT = 'N'
+            START WITH   MENU_NO = #{MENU_NO}
+            ORDER SIBLINGS BY   SORT_ORDR, MENU_NO
+	</select>
+</mapper>

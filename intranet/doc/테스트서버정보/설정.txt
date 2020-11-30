@@ -1,0 +1,4 @@
+1. globals.properties 경로 설정 해주세요.
+
+%주의 logFile.path 는 프로젝트 외부 경로로 설정해주세요.%
+

@@ -1,0 +1,39 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Report  call page</title>
+<script type="text/javascript" src="/newsgis/js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="/newsgis/js/ui.js"></script>
+</head>
+
+<body>
+	<form action="./report_param.jsp" id="reportForm" name="reportForm" method="post">
+		<input type="hidden" name="crfName" id="crfName"/><br>
+		<input type="hidden" name="year" id="year"/><br>
+		<input type="hidden" name="crfDb" value="oracle1"/><br>
+		<input type="hidden" name="paramString" id="paramString"/><br>
+		<input type="submit" value="CALL" style="display: none;"/>
+ 	</form> 
+</body>
+ <script type="text/javascript">
+	  var _tempUrl = window.location.search.substring(1);
+	
+	  var _tempArray = _tempUrl.split('&');
+	  for(var i = 0; _tempArray.length; i++) {
+		  if( _tempArray[i]==null){
+			  break;
+		  }
+		var _keyValuePair = _tempArray[i].split('=');
+		_keyValuePair+=""
+		var id = _keyValuePair.substring(0,_keyValuePair.indexOf(','));
+		var keyValuePair = _keyValuePair.substring(_keyValuePair.indexOf(',')+1);
+		document.getElementById(id).value=keyValuePair;
+
+	}
+	  
+	  document.reportForm.submit();
+	  
+</script>
+</html>

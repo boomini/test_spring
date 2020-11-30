@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- SELECT * FROM ( SELECT A.*, ROWNUM RNUM FROM (
+  ) A ) WHERE RNUM BETWEEN #{startRow} AND #{endRow} -->
+<mapper namespace="vacMapper">
+
+  <select id="getVacCount" parameterType="Map" resultType="int">
+  		<![CDATA[
+  		SELECT COUNT(*) FROM (
+  		SELECT VACKEY , USER_NM,  VACDAY ,STEP FROM (
+				SELECT 
+					SIGN_ID , LINE_ID  , SIGN_YN , VACKEY , USER_NM , STARTDAY||'~'||ENDDAY AS VACDAY , 
+					NVL( (SELECT SL.SIGN_YN FROM SIGN_LINE SL WHERE SL.SIGN_ID = S.SIGN_ID AND SL.SIGN_ORDER = (S.SIGN_ORDER-1)) , 'Y')AS PRESIGN,
+					F_GET_CODE_NM('219',SIGN_YN) AS STEP
+				FROM SIGN_LINE S , VACATION V
+				WHERE VACKEY = SIGN_ID 
+      				AND S.LINE_ID=#{gUserId}
+	  			)
+	  			 WHERE SIGN_YN = 'N'
+	  			 AND PRESIGN='Y'
+				UNION ALL 
+		 SELECT 
+		 	   VACKEY , USER_NM,  startday||'~'||endday AS vacday , 
+		 	   CASE WHEN
+		 	   		COUNT(*) =  COUNT( DECODE(SIGN_YN,'Y',1)  ) THEN '결재 완료'
+		 	   		when
+		 	   		COUNT( DECODE(SIGN_YN,'R',1)  ) > 0 THEN  '반려'
+		 	   		ELSE
+		 	   		 '결재 대기'
+		 	   	END AS STEP	 
+		  FROM VACATION V , SIGN_LINE S  
+		 WHERE 
+			  V.VACKEY = S.SIGN_ID
+		   AND REGIST_USER=#{gUserId}
+		 GROUP BY VACKEY , USER_NM ,  STARTDAY||'~'||ENDDAY
+		 )
+		]]>
+  </select>
+  <select id="getVacList" parameterType="Map" resultType="HashMap">
+  <![CDATA[
+  		SELECT * FROM ( SELECT A.*, ROWNUM RNUM FROM (
+  		SELECT ROWNUM AS RS , VACKEY ,  USER_NM , STEP , VACDAY FROM (
+  		SELECT VACKEY , USER_NM,  VACDAY ,STEP FROM (
+				SELECT 
+					SIGN_ID , LINE_ID  , SIGN_YN , VACKEY , USER_NM , STARTDAY||'~'||ENDDAY AS VACDAY , 
+					NVL( (SELECT SL.SIGN_YN FROM SIGN_LINE SL WHERE SL.SIGN_ID = S.SIGN_ID AND SL.SIGN_ORDER = (S.SIGN_ORDER-1)) , 'Y')AS PRESIGN,
+					F_GET_CODE_NM('219',SIGN_YN) AS STEP
+				FROM SIGN_LINE S , VACATION V
+				WHERE VACKEY = SIGN_ID 
+      				AND S.LINE_ID=#{gUserId}
+	  			)
+	  			 WHERE SIGN_YN = 'N'
+	  			 AND PRESIGN='Y'
+				UNION ALL 
+		 SELECT 
+		 	   VACKEY , USER_NM,  startday||'~'||endday AS vacday , 
+		 	   CASE WHEN
+		 	   		COUNT(*) =  COUNT( DECODE(SIGN_YN,'Y',1)  ) THEN '결재 완료'
+		 	   		when
+		 	   		COUNT( DECODE(SIGN_YN,'R',1)  ) > 0 THEN  '반려'
+		 	   		ELSE
+		 	   		 '결재 대기'
+		 	   	END AS STEP	 
+		  FROM VACATION V , SIGN_LINE S  
+		 WHERE 
+			  V.VACKEY = S.SIGN_ID
+		   AND REGIST_USER=#{gUserId}
+		 GROUP BY VACKEY , USER_NM ,  STARTDAY||'~'||ENDDAY
+		 ) ) A ) WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+		]]>
+  </select>
+  
+  <insert id="insertVac" parameterType="Map">
+	  <selectKey resultType="string" keyProperty="VAC_SEQ" order="BEFORE">
+				SELECT 'VAC_'||VACATION_SEQ.NEXTVAL AS VAC_SEQ FROM DUAL
+	  </selectKey>
+			
+	  INSERT INTO VACATION
+				(ORG, AUTH, USER_NM, PNUM, VAC_CODE, STARTDAY, ENDDAY, REASON, VACKEY, REGIST_DT, REGIST_USER)	
+			VALUES(
+				#{ORG},#{AUTH},#{USER_NM},#{PNUM},#{VAC_CODE},#{startDay},#{endDay},#{REASON},#{VAC_SEQ},SYSDATE,#{gUserId}
+				)
+  </insert>
+  
+  <insert id="insertVacLine" parameterType="Map">
+  	INSERT INTO SIGN_LINE
+			(SIGN_ID, LINE_ID, SIGN_YN, SIGN_ORDER)
+	VALUES(#{VAC_SEQ},#{LINE_ID},'N',#{SIGN_ORDER})
+  </insert>
+  
+  <select id="getMemberList" parameterType="Map" resultType="HashMap">
+		SELECT USER_ID , USER_NM||' '||F_GET_CODE_NM('50',AUTHOR_CODE) AS USERNM
+		FROM COM_USER
+		WHERE AUTHOR_CODE!=9999
+		  AND USER_ID != #{gUserId}
+  </select>
+  <select id="getMember"  parameterType="Map" resultType="HashMap">
+	  SELECT 
+			F_GET_CODE_NM('206',ORG_CODE) AS ORG,
+			F_GET_CODE_NM('50',AUTHOR_CODE) AS AUTH,
+			DECODE(MBTLNUM ,'--',TELNO , MBTLNUM) AS PNUM,
+			USER_NM
+			FROM COM_USER
+		WHERE
+			USER_ID = #{gUserId}
+  </select>
+  <select id="getSignCheck"  parameterType="Map" resultType="HashMap">
+		SELECT ORG,AUTH,USER_NM,PNUM,VAC_CODE,F_GET_CODE_NM('213',VAC_CODE) AS VACNM,
+				TO_CHAR(STARTDAY,'YYYY-MM-DD') AS STARTDAY,
+				TO_CHAR(ENDDAY,'YYYY-MM-DD') AS ENDDAY,
+				REASON,VACKEY,REGIST_DT,
+			   STARTDAY||'~'||ENDDAY AS VACDAY,
+			   DECODE(REGIST_USER , #{gUserId} , 'SELF' , 'SIGN' ) AS E_MODE, YC , NC , RC
+		 FROM VACATION ,
+		 (SELECT 
+				COUNT( CASE WHEN SIGN_YN = 'Y' THEN 1 END ) AS YC,
+				COUNT( CASE WHEN SIGN_YN = 'N' THEN 1 END ) AS NC,
+				COUNT( CASE WHEN SIGN_YN = 'R' THEN 1 END ) AS RC
+			FROM SIGN_LINE 
+		   WHERE SIGN_ID = #{VACKEY}
+		 )
+		WHERE VACKEY = #{VACKEY}
+		
+  </select>
+  <select id="getSignLineList" parameterType="Map" resultType="HashMap">
+	  SELECT 
+			LINE_ID , USER_NM ,  
+			F_GET_CODE_NM('219',SIGN_YN) AS SIGN_STEP,
+			F_GET_CODE_NM('50',AUTHOR_CODE) AS AUTO_NM
+		FROM SIGN_LINE , COM_USER		
+		WHERE
+			SIGN_ID = #{VACKEY}
+		AND LINE_ID = USER_ID
+		ORDER BY SIGN_ORDER
+  </select>	
+	<update id="updateVac" parameterType="Map">
+		UPDATE VACATION
+			SET 
+			VAC_CODE=#{VAC_CODE}, 
+			STARTDAY=#{startDay},
+			ENDDAY=#{endDay}, 
+			REASON=#{REASON}, 
+			UPDATE_DT=SYSDATE, 
+			UPDATE_USER=#{gUserId}
+		WHERE VACKEY=#{VACKEY}
+	</update>	
+	<delete id="deleteLine" parameterType="Map">
+		DELETE FROM SIGN_LINE WHERE SIGN_ID = #{VACKEY}
+	</delete>
+	<delete id="deleteVac" parameterType="Map">
+		DELETE FROM VACATION WHERE VACKEY = #{VACKEY}
+	</delete>
+	<update id="signVac" parameterType="Map">
+		UPDATE SIGN_LINE SET
+				SIGN_YN = #{SIGN_YN},
+				SIGN_DT = SYSDATE
+		 WHERE
+				SIGN_ID = #{VACKEY} 
+			AND LINE_ID = #{gUserId}
+	</update>
+	
+</mapper>
+
+

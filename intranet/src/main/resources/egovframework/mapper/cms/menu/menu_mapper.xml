@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="menuMapper">
+    <!-- oneDepth 메뉴 리스트 -->
+    <select id="getOneDptList" parameterType="Map" resultType="HashMap">
+        SELECT
+	        A.*, (
+	               SELECT
+	               COUNT(*) 
+		        FROM
+		            COM_MENU 
+		        WHERE
+		            MENU_SE = #{MENU_SE}
+		            AND DELETE_AT = 'N' 
+		            <if test="USE_AT !=null and USE_AT !=''">
+		            AND USE_AT = #{USE_AT}
+		            </if>
+		            <if test="TOPMENU_USE_AT !=null and TOPMENU_USE_AT !=''">
+		            AND TOPMENU_USE_AT =  #{TOPMENU_USE_AT}
+		            </if>
+		            )   AS CNT        
+        FROM COM_MENU A
+        WHERE MENU_SE = #{MENU_SE}
+        AND DELETE_AT   = 'N'
+        AND MENU_LEVEL = '1'
+        <if test="USE_AT !=null and USE_AT !=''">
+        AND USE_AT = #{USE_AT}
+        </if>
+        <if test="ONE_DEPTH_ID !=null and ONE_DEPTH_ID !=''">
+            AND MENU_NO = #{ONE_DEPTH_ID}
+        </if>
+        <if test="TOPMENU_USE_AT !=null and TOPMENU_USE_AT !=''">
+            AND TOPMENU_USE_AT = #{TOPMENU_USE_AT}
+        </if>
+        <if test='MENU_AUTH_YN == "Y"'>
+          	AND MENU_NO IN (
+                          SELECT DISTINCT MENU_NO FROM COM_MENU_AUTHOR C
+                          WHERE (C.GROUP_ID = #{authGrp} OR C.GROUP_ID = '0200')
+                          AND USE_AUTHOR_AT = 'Y'
+                          )
+        </if>
+        ORDER BY SORT_ORDR, MENU_NO
+    </select>
+    <!-- 각각의 조건에 해당하하는 메뉴 리스트 -->
+    <select id="getSelDptList" parameterType="Map" resultType="HashMap">
+        SELECT *
+        FROM COM_MENU
+        WHERE MENU_SE = #{MENU_SE}
+        <if test="UPPER_MENU_NO != null and UPPER_MENU_NO != ''">
+            AND UPPER_MENU_NO = #{UPPER_MENU_NO}
+        </if>
+        <if test="DEPTH_ID != null and DEPTH_ID != ''">
+            AND MENU_NO = #{DEPTH_ID}
+        </if>
+            AND USE_AT = NVL(#{USE_AT},'Y')
+            AND DELETE_AT = 'N'
+        <if test="MENU_LEVEL != null and MENU_LEVEL != ''">            
+        AND MENU_LEVEL = #{MENU_LEVEL}
+        </if>    
+        ORDER BY SORT_ORDR, MENU_NO
+    </select>
+    <!-- 기본 메뉴 리스트 조회 -->
+    <select id="getList" parameterType="Map" resultType="HashMap">
+        SELECT A.*, DECODE (MENU_NO, LEAD (UPPER_MENU_NO) OVER (ORDER BY TO_NUMBER(MENU_NO)), 1, 0) IS_DIR
+         FROM COM_MENU A WHERE MENU_SE = #{MENU_SE} AND DELETE_AT = 'N'
+        <if test="MENU_LEVEL !=null and MENU_LEVEL !=''">
+        AND MENU_LEVEL = #{MENU_LEVEL}
+        </if>
+        <if test="UPPER_MENU_NO !=null and UPPER_MENU_NO !=''">
+        AND UPPER_MENU_NO = #{UPPER_MENU_NO}
+        </if>
+        ORDER BY SORT_ORDR, MENU_NO
+    </select>
+    <!-- 현재 메뉴 위치 정보 -->
+    <select id="getThisLocationList" parameterType="Map" resultType="HashMap">
+        SELECT LEVEL, MENU_NM, ENG_MENU_NM, MENU_NO, DECODE (MENU_NO, LEAD (UPPER_MENU_NO) OVER (ORDER BY MENU_NO), 1, 0) IS_DIR, LINK_URL , CNTNTS_TY , 
+        (SELECT COUNT(*) FROM COM_MENU WHERE UPPER_MENU_NO=A.MENU_NO AND DELETE_AT = 'N') AS CNT,
+        MENU_SE
+        FROM COM_MENU A WHERE DELETE_AT = 'N'
+        CONNECT BY PRIOR UPPER_MENU_NO=MENU_NO  AND DELETE_AT = 'N'
+        START WITH MENU_NO=#{UPPER_MENU_NO} ORDER BY LEVEL DESC
+    </select>
+    <!-- 메뉴정보 상세 -->
+    <select id="getMenu" parameterType="Map" resultType="HashMap">
+        SELECT     NVL (MAX(B.USE_AUTHOR_AT), 'N')      USE_AUTHOR_AT,
+                NVL (MAX(B.REGISTE_AUTHOR_AT), 'N')  REGISTE_AUTHOR_AT,
+                NVL (MAX(B.DELETE_AUTHOR_AT), 'N')   DELETE_AUTHOR_AT,
+                NVL (MAX(B.CHANGE_AUTHOR_AT), 'N')   CHANGE_AUTHOR_AT,
+                A.*,
+                DECODE (CNTNTS_TY, 'B', (SELECT BBS_NM FROM COM_BBS WHERE BBS_NO = A.BBS_NO)) AS M_NM
+        FROM    COM_MENU A
+           LEFT JOIN
+              COM_MENU_AUTHOR B
+              ON  A.MENU_NO = B.MENU_NO
+              AND A.MENU_SE = B.MENU_SE
+              AND (B.GROUP_ID = '0200' OR B.GROUP_ID = #{authGrp})
+              AND USE_AUTHOR_AT = 'Y'
+        WHERE A.MENU_NO = #{MENU_NO}
+        GROUP   BY     A.MENU_NO, MENU_NM, ENG_MENU_NM, A.MENU_SE, MENU_LEVEL, MENU_DC, SORT_ORDR, UPPER_MENU_NO, BBS_NO, CNTNTS_NO, CNTNTS_TY, LINK_URL, POPUP_AT, TOPMENU_USE_AT, USE_AT, DELETE_AT, A.REGIST_DT, A.REGISTER_ID, A.CHANGE_DT, A.CHANGER_ID
+        <!-- SELECT A.* ,
+        DECODE(CNTNTS_TY,'B',(SELECT BBS_NM FROM COM_BBS WHERE BBS_NO = A.BBS_NO)) AS M_NM
+        FROM COM_MENU A
+        WHERE MENU_NO = #{MENU_NO} -->
+    </select>   
+     
+    <!-- 메뉴 저장 -->
+    <insert id="insertMenu" parameterType="Map">
+        <selectKey keyProperty="MENU_NO" resultType="int" order="BEFORE">
+            SELECT NVL(MAX(MENU_NO),0)+1  FROM  COM_MENU
+        </selectKey>
+        INSERT INTO COM_MENU (
+            MENU_NO, MENU_NM, 
+            MENU_SE, MENU_LEVEL,
+            MENU_DC,
+            SORT_ORDR,
+            REGIST_DT,
+            CHANGE_DT,
+            REGISTER_ID, 
+            BBS_NO, 
+            CHANGER_ID, CNTNTS_NO, UPPER_MENU_NO,
+            USE_AT, 
+            CNTNTS_TY, LINK_URL, POPUP_AT,
+            DELETE_AT, TOPMENU_USE_AT, ENG_MENU_NM)
+            VALUES (
+            #{MENU_NO}, #{MENU_NM}, 
+            #{MENU_SE}, #{MENU_LEVEL},
+            #{MENU_DC},
+            '9999',
+            SYSDATE,
+            #{CHANGE_DT},
+            #{gUserId}, 
+            #{BBS_NO},
+            #{gUserId}, #{CNTNTS_NO}, NVL(#{UPPER_MENU_NO},0),
+            #{USE_AT}, 
+            #{CNTNTS_TY}, #{LINK_URL}, #{POPUP_AT},
+            'N', #{TOPMENU_USE_AT}, #{ENG_MENU_NM}
+        )
+    </insert>
+    <!--  메뉴 수정 -->
+    <update id="updateMenu" parameterType="Map">
+	    UPDATE COM_MENU
+	    SET
+	           MENU_NM         = #{MENU_NM},
+	           ENG_MENU_NM     = #{ENG_MENU_NM},
+	           MENU_SE         = #{MENU_SE},
+	           MENU_DC         = #{MENU_DC},
+	           BBS_NO          = #{BBS_NO},
+	           CHANGE_DT       = SYSDATE,
+	           CHANGER_ID      = #{gUserId},
+	           USE_AT          = #{USE_AT},
+	           CNTNTS_TY       = #{CNTNTS_TY},
+	           LINK_URL        = #{LINK_URL},
+	           POPUP_AT        = #{POPUP_AT},
+	           TOPMENU_USE_AT  = #{TOPMENU_USE_AT}
+	    WHERE  MENU_NO         = #{MENU_NO}
+    </update>
+    <!-- 메뉴 삭제 -->
+    <update id="deleteMenu" parameterType="Map">
+	    UPDATE COM_MENU
+	    SET DELETE_AT = 'Y'
+	    WHERE  MENU_NO = #{MENU_NO}
+    </update>
+    <!-- 메뉴정렬수정 -->
+    <update id="updateOrder" parameterType="Map">
+	    UPDATE COM_MENU
+	    SET SORT_ORDR   = #{SORT_ORDR}
+	    WHERE  MENU_NO  = #{MENU_NO}
+    </update>
+    <!-- 메뉴 트리구조 -->
+    <select id="getTreeList" parameterType="Map" resultType="HashMap">
+        SELECT AA.*, (SELECT COUNT(*) FROM COM_MENU WHERE UPPER_MENU_NO=AA.MENU_NO AND DELETE_AT = 'N' AND USE_AT = NVL(#{USE_AT},'Y')) AS CNT
+            ,F_GET_CODE_NM('2',CNTNTS_TY) CNTNTS_TY_NM
+        FROM  (
+            SELECT LEVEL, A.*
+              FROM COM_MENU A
+             WHERE DELETE_AT = 'N'
+             <if test="USE_AT !=null and USE_AT !=''">
+             AND USE_AT = #{USE_AT}
+             </if>
+            <if test="MENU_LEVEL !=null and MENU_LEVEL !=''">
+                AND MENU_LEVEL IN
+                <foreach collection="MENU_LEVEL" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test='MENU_AUTH_YN == "Y"'>
+                AND MENU_NO IN (
+                          SELECT DISTINCT MENU_NO FROM COM_MENU_AUTHOR C
+                          WHERE (C.GROUP_ID = #{authGrp} OR C.GROUP_ID = '0200')
+                          AND USE_AUTHOR_AT = 'Y'
+                          )
+            </if>
+            <if test="WEB_LEFT != null and WEB_LEFT != ''">
+            	<if test='authGrp ==null'>AND MENU_NO NOT IN('13')</if>
+            	<if test='authGrp !=null and authGrp != "" '>AND MENU_NO NOT IN('10','11','12')</if>
+            </if>
+            <!-- AND MENU_SE = #{MENU_SE} -->
+            CONNECT BY  PRIOR MENU_NO =  UPPER_MENU_NO AND DELETE_AT = 'N' <if test="USE_AT !=null and USE_AT !=''">AND USE_AT = #{USE_AT}</if>
+            START WITH MENU_NO= #{MENU_NO}
+            ORDER SIBLINGS BY SORT_ORDR , MENU_NO
+        ) AA
+    </select>
+    <!--메뉴 테이블에 컨텐츠 아이디 등록  -->
+	<update id="updateContentId" parameterType="Map">
+		UPDATE COM_MENU
+		SET CNTNTS_NO   = #{CNTNTS_NO}
+		WHERE  MENU_NO = #{MENU_NO}
+	</update>
+	<!-- 하위 메뉴 찾기 -->
+	<select id="getChildMenu" parameterType="Map" resultType="HashMap">
+	   SELECT /*+ INDEX_ASC (A IDX_COM_MENU_01) */  * FROM COM_MENU A
+       WHERE UPPER_MENU_NO = #{MENU_NO}
+       AND USE_AT  ='Y'
+       AND DELETE_AT  = 'N'
+       <if test='MENU_AUTH_YN == "Y"'>
+          AND MENU_NO IN (
+                          SELECT DISTINCT MENU_NO FROM COM_MENU_AUTHOR C
+                          WHERE (C.GROUP_ID = #{authGrp} OR C.GROUP_ID = '0200')
+                          AND USE_AUTHOR_AT = 'Y'
+                          )
+        </if>
+       AND ROWNUM  = 1
+    </select>
+    <!-- 메뉴 권한 삭제 -->
+    <delete id="deleteMenuAuth" parameterType="Map">
+        DELETE FROM COM_MENU_AUTHOR
+        WHERE GROUP_ID  = #{GROUP_ID}
+        AND MENU_SE     = #{MENU_SE}
+    </delete>
+    <!-- 메뉴 권한 등록 -->
+    <insert id="insertMenuAuth" parameterType="Map">
+        INSERT INTO COM_MENU_AUTHOR 
+        ( GROUP_ID, MENU_NO, MENU_SE, USE_AUTHOR_AT, REGISTE_AUTHOR_AT, CHANGE_AUTHOR_AT, DELETE_AUTHOR_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+        VALUES 
+        ( #{GROUP_ID}, #{MENU_NO}, #{MENU_SE}, #{USE_AUTHOR_AT}, #{REGISTE_AUTHOR_AT}, #{CHANGE_AUTHOR_AT}, #{DELETE_AUTHOR_AT}, SYSDATE, #{gUserId}, SYSDATE, #{gUserId}) 
+    </insert>
+    <!-- 메뉴 권한 목록 -->
+     <select id="getMenuAuthList" parameterType="Map" resultType="HashMap">
+        SELECT * FROM COM_MENU_AUTHOR
+        WHERE GROUP_ID = NVL(#{GROUP_ID},'0200')
+    </select>
+    
+    
+    <!-- 메인 메뉴 체크 -->
+     <select id="getMainMenuCheck" parameterType="Map" resultType="HashMap">
+     <![CDATA[
+        	  SELECT  
+        	  		CASE WHEN LENGTH(MENU_NM) >= 7 THEN SUBSTR(MENU_NM,0,5) || '...' ELSE MENU_NM END AS MENU_NM , M.MENU_NO
+  				FROM COM_MENU  M , COM_MENU_AUTHOR A
+ 			   WHERE 
+   					 M.MENU_NO = A.MENU_NO
+ 				 AND M.MENU_LEVEL='2'
+				 AND M.USE_AT = 'Y'      
+				 AND M.DELETE_AT ='N'
+				 AND A.GROUP_ID='0200'
+			ORDER BY CNTNTS_TY DESC , MENU_NM
+           ]]>
+    </select>
+    
+    
+    
+</mapper>

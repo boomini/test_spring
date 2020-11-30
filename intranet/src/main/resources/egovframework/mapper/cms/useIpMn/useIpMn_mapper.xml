@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="useIpMnMapper">
+
+	<!-- 허용IP관리 조회 쿼리 -->
+	<select id="getUseIpMnList" parameterType="Map" resultType="HashMap">
+		SELECT * FROM COM_MNGR_IP
+		<where>
+			<if test="USE_AT!=nul and USE_AT!=''">
+				USE_AT = #{USE_AT}
+			</if>
+		</where>
+		ORDER BY MNGR_IP DESC, SN DESC
+	</select>
+
+	<!-- 허용IP관리 상세 쿼리 -->
+	<select id="getUseIpMn" parameterType="Map" resultType="HashMap">
+		SELECT * FROM COM_MNGR_IP
+		WHERE SN = #{SN}
+	</select>
+
+	<!-- 허용IP관리 등록 -->
+	<insert id="insertUseIpMn" parameterType="Map">
+		<selectKey resultType="int" keyProperty="SN" order="BEFORE">
+			SELECT NVL(MAX(SN),0)+1  FROM  COM_MNGR_IP
+		</selectKey>
+        <!-- 순번, 관리자_IP, 사용_여부, 등록_일시, 등록자_ID, 변경_일시, 변경자_ID -->
+		INSERT INTO COM_MNGR_IP
+		( SN, MNGR_IP, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID )
+		VALUES 
+		( #{SN}, #{MNGR_IP}, NVL(#{USE_AT},'Y'), SYSDATE, #{gUserId},	SYSDATE, #{gUserId} )
+	</insert>
+
+	<!-- 허용IP관리 수정 -->
+	<update id="updateUseIpMn" parameterType="Map">
+		UPDATE COM_MNGR_IP SET
+		MNGR_IP 		    = #{MNGR_IP},   <!--관리자IP주소 -->
+		REGIST_DT 			= SYSDATE,      <!--등록_일시 -->
+		REGISTER_ID 		= #{gUserId},   <!--등록자_ID -->
+		CHANGE_DT 			= SYSDATE,      <!--변경_일시 -->
+		CHANGER_ID 			= #{gUserId}    <!--변경자_ID -->
+		WHERE SN 	        = #{SN}
+	</update>
+
+	<!-- 허용IP관리 삭제 -->
+	<update id="deleteUseIpMn" parameterType="Map">
+		UPDATE COM_MNGR_IP SET
+		USE_AT 				= #{USE_AT},   <!--사용_여부 -->
+		CHANGE_DT 			= SYSDATE,     <!--변경_일시 -->
+		CHANGER_ID 			= #{gUserId}   <!--변경자_ID -->
+		WHERE SN 	        = #{SN}
+	</update>
+</mapper>

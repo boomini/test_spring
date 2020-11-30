@@ -1,0 +1,72 @@
+.pr_content{
+border: 1px solid #d4d4d4;
+width: 100% 
+}
+
+table> tbody> tr> th{
+ padding:4px 3px;  border:1px solid #d4d4d4; 
+ font-family:Dotum; font-size:12px; padding:10px; 
+ font-weight:bold;text-align: center;
+}
+table> tbody> tr> td{
+ padding:4px 3px;  border:1px solid #d4d4d4; 
+ font-family:Dotum; font-size:12px; padding:10px; 
+ font-weight:bold;text-align: center;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+}
+
+* {
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+}
+
+.page {
+	width: 21cm;
+	min-height: 29.7cm;
+	padding: 2cm;
+	margin: 0 auto;
+	background: #eee;
+}
+
+.subpage {
+	border: 2px solid #d4d4d4;
+	background: #fff;
+	height: 257mm;
+}
+
+@page {
+	size: A4;
+	margin: 0;
+}
+
+@media
+print
+{
+html,body {
+	width: 210mm;
+	height: 297mm;
+}
+
+.page {
+	margin: 0;
+	border: initial;
+	width: initial;
+	min-height: initial;
+	box-shadow: initial;
+	background: initial;
+	page-break-after: always;
+}
+}
+
+
+
+
+
+
+
+
+

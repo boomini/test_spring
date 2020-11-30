@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="codeUtilMapper">
+    <!-- 프레임워크 공통 코드 조회 -->
+    <select id="getComCodeList" parameterType="Map" resultType="HashMap">
+        SELECT * FROM COM_CODE A , COM_VRIABL_TMPR B
+        WHERE 
+        UPPER_CODE_NO = VRIABL_1_VALUE
+        AND USE_AT ='Y'
+        ORDER BY SORT_ORDR, CODE_NO
+    </select>
+  	
+  
+</mapper>

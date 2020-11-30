@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="JFile">
+
+    <insert id="addAttachFile" parameterType="egovframework.common.jfile.service.impl.JFileVO">
+    <selectKey keyProperty="fileSeq" resultType="string" order="BEFORE">
+    SELECT NVL(MAX(FILE_SN),0)+1
+                  FROM COM_ATCHMNFL
+                 WHERE FILE_ID = #{fileId}
+    </selectKey>
+        INSERT /* 첨부파일 정보 저장 */ 
+          INTO COM_ATCHMNFL 
+              (
+               FILE_ID            , 
+               FILE_SN            , 
+               FILE_REAL_NM       , 
+               FILE_SIZE          , 
+               FILE_FRMAT         , 
+               FILE_VIRTL_NM      , 
+               THUMB_VIRTL_NM     , 
+               THUMB_AT           , 
+               DWLD_CO            , 
+               DWLD_END_DE        , 
+               DWLD_LMTT_CO       ,
+               REGIST_DT            
+              )
+               VALUES
+              (  
+               #{fileId}                        ,
+               #{fileSeq}                       , 
+               #{fileName}                      , 
+               #{fileSize}                      , 
+               #{fileType}                      ,
+               #{fileMask}                      ,
+               #{fileThumbnailMask}             ,
+               #{fileThumbnailYn}               ,
+                0                               , 
+               #{downloadExpireDate}            ,
+               #{downloadLimitCount}            ,
+               SYSDATE
+              )     
+    </insert>
+    
+    <update id="updateAttachFileDeleteYnByFileId" parameterType="java.util.Map">
+        UPDATE COM_ATCHMNFL
+           SET DELETE_AT = #{deleteYn}
+         WHERE FILE_ID   = #{fileId}
+    </update>
+    
+    <update id="updateAttachFileDeleteYn" parameterType="java.util.Map">
+        UPDATE COM_ATCHMNFL
+           SET DELETE_AT    = #{deleteYn}
+         WHERE FILE_ID      = #{fileId}
+         <if test="fileSeqs !=null and fileSeqs !=''">
+             <foreach collection="fileSeqs" item="item" open="AND FILE_SN in (" close=")" separator=",">
+                TRIM(#{item})
+             </foreach>
+         </if>  
+       
+    </update>
+    
+    <update id="updateAttachFileDownloadCount" parameterType="java.util.Map">
+        UPDATE COM_ATCHMNFL 
+           SET DWLD_CO = DWLD_CO + 1
+           <where>
+             <if test="fileId != null and fileId !=''" >
+                AND FILE_ID  = #{fileId}
+             </if>
+             <if test="fileSeq != null and fileSeq !=''">
+                AND FILE_SN = #{fileSeq}
+             </if>
+           </where>
+    </update>
+    
+    <update id="updateAttachFileDownloadCountBySequence" parameterType="java.util.Map">
+        UPDATE COM_ATCHMNFL
+           SET DWLD_CO = DWLD_CO + 1
+         WHERE FILE_ID          = #{fileId}
+           AND FILE_SN          = #{fileSeq}
+    </update>
+    
+    <update id="updateAttachFileDownloadCountByFileId" parameterType="string">
+        UPDATE COM_ATCHMNFL
+           SET DWLD_CO = DWLD_CO + 1
+         WHERE FILE_ID = #{value}
+    </update>
+    
+    <delete id="removeAttachFile" parameterType="java.util.Map">
+        DELETE
+          FROM COM_ATCHMNFL 
+         WHERE FILE_ID  = #{fileId}
+         <if test="fileSeqs !=null and fileSeqs !=''">
+             <foreach collection="fileSeqs" item="item" open="AND FILE_SN in (" close=")" separator=",">
+                 TRIM(#{item})
+             </foreach>
+         </if>
+    </delete>
+    
+    <select id="getAttachFileToMap" parameterType="java.util.Map" resultType="egovframework.common.jfile.service.impl.JFileVO">
+        SELECT 
+               FILE_ID                  as fileId, 
+               FILE_SN                  as fileSeq, 
+               FILE_REAL_NM             as fileName,
+               FILE_SIZE                as fileSize, 
+               FILE_VIRTL_NM            as fileMask, 
+               THUMB_VIRTL_NM           as fileThumbnailMask, 
+               THUMB_AT                 as fileThumbnailYn, 
+               DWLD_CO                  as downloadCount, 
+               DWLD_END_DE              as downloadExpireDate, 
+               DWLD_LMTT_CO             as downloadLimitCount, 
+               FILE_FRMAT               as fileType, 
+               REGIST_DT                as regDate
+          FROM COM_ATCHMNFL
+          WHERE FILE_ID  = #{fileId}
+          <if test="fileSeq != null and fileSeq !=''">
+            AND FILE_SN = #{fileSeq}
+          </if>
+    </select>
+    
+    <select id="getAttachFileSeqs" parameterType="string" resultType="string">
+        SELECT FILE_SN
+          FROM COM_ATCHMNFL
+         WHERE FILE_ID = #{value}
+           AND DELETE_AT = 'Y'  
+    </select>
+    
+    <select id="getMaxFileSeq" parameterType="string" resultType="int">
+        SELECT NVL(MAX(FILE_SN),0)+1 
+        FROM COM_ATCHMNFL 
+        WHERE FILE_ID = #{fileId}  
+    </select>
+    
+    <select id="isExistingAttachFileInfo" parameterType="java.util.Map" resultType="string">
+         SELECT FILE_ID
+         FROM COM_ATCHMNFL
+         WHERE FILE_ID  = #{fileId}
+         <if test="fileSeqs !=null and fileSeqs !=''">
+             <foreach collection="fileSeqs" item="item" open="AND FILE_SN in (" close=")" separator=",">
+                 TRIM(#{item})
+             </foreach>
+         </if>
+    </select>
+    
+</mapper>

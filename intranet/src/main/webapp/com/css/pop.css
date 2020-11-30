@@ -1,0 +1,44 @@
+@charset "utf-8";
+/* CSS Document */
+
+
+#pop { border-top: 6px solid #464646; padding: 7px; background: #ececec; }
+#pop> p.tit { padding: 8px 0px 0px 45px; height: 33px; color: #fff; background: url(/cms/_images/pop/top_tit.gif) no-repeat, url(/cms/_images/pop/top_bg.gif) repeat-x; letter-spacing: -1px; font-size: 18px; }
+
+#pop_cont { background: #fff; border: 1px solid #ddd; margin-top: 7px; padding: 7px; font-size: 15px; }
+a.pop_bt { background: #fff; padding: 4px 20px; border: 1px solid #ddd; color: #000; }
+
+.pop_bt2 { margin-bottom: 15px; }
+.pop_bt2> a { background: #5c5c5c; border: 1px solid #525252; padding: 2px 10px; color: #fff; font-size: 13px; }
+
+.pop_btn1 { background: #5c5c5c; border: 1px solid #525252; padding: 3px 20px; color: #fff; font-size: 13px; }/* bang */
+.condition> table { width:100% }
+.condition> table> tbody> tr> td {text-align: left; }
+
+ 
+#M_Pop { width: 100%; height: 100%; letter-spacing: -1px; }
+#M_Pop .M_info { height: 100%}
+#M_Pop .M_info h2 { width: 100%; height: 30px; padding-top: 11px; color: #FFF; font-family: 'NanumGothicBlod'; background: url(/cms/_images/pop/top_tit.gif) no-repeat, url(/cms/_images/pop/top_bg.gif) repeat-x; font-size: 17px;text-align: center; }
+#M_Pop .popFoot { text-align: right;vertical-align: middle; }
+#M_Pop .labelPop { cursor: pointer;font-size: 14px;padding-right: 5px;}
+#M_Pop .popContent {
+    width: 100%;
+    padding: 2px;
+    text-align: left;
+    height: auto;
+    font-size: 14px;
+    line-height: 26px;
+    color: #000;
+}
+.M_info .Close {
+    float: right;
+    width: 12px;
+    height: 12px;
+    cursor: pointer;
+    background: url(/cms/_images/pop/popClose.png) no-repeat;
+    background-size: 12px 12px;
+    margin-top: -25px;
+    margin-right: 15px;
+}
+
+#M_Pop .M_info div.NumDesc { background: #f7f7f7; border: 1px solid #d2d2d2; margin: 8px; padding: 15px; height: ${vo.P_HEIGHT-110}px; overflow-y: scroll;}

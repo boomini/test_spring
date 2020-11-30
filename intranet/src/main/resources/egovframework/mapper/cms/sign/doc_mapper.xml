@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="docMapper">
+
+  <select id="getListCount" parameterType="Map" resultType="int">
+  		SELECT COUNT(*) FROM (
+  			SELECT DOC_ID , USER_NM, TITLE,SUB_TITLE,URL,REGIST_DT FROM (
+				SELECT VACKEY AS DOC_ID ,USER_NM AS USER_NM , '휴가신청서' AS TITLE, F_GET_CODE_NM('213',VAC_CODE) ||'('|| STARTDAY|| '~'|| ENDDAY ||')' AS SUB_TITLE , '/cms/sign/vac/view' AS URL,REGIST_DT FROM VACATION
+					UNION ALL
+				SELECT EXPENSE_ID AS DOC_ID ,USER_NM AS USER_NM , '지출결의서' AS TITLE , EXPENSE_DATE||' 내역서' AS SUB_TITLE , '/cms/sign/expense/view' AS url,REGIST_DATE AS REGIST_DT   FROM EXPENSE E 
+					UNION ALL
+				SELECT BIZ_ID AS DOC_ID ,  USER_NM AS USER_NM , '출장신청서' AS TITLE, VISITS||' '||PURPOSE||'('|| STARTDAY|| '~'|| ENDDAY ||')' AS SUB_TITLE , '/cms/sign/biztrip/view' AS URL,REGIST_DATE AS REGIST_DT  FROM BIZTRIP B 
+					UNION ALL
+				SELECT OIL_ID AS DOC_ID ,   USER_NM AS USER_NM , '유류비' AS TITLE, OIL_MONTH||' 내역서' AS SUB_TITLE , '/cms/sign/oil/view' AS URL,REGIST_DT  FROM OIL O 
+			) A , (
+				SELECT SIGN_ID , count(*) AS TOT_SIGN , count( decode(SIGN_YN , 'Y' , 1)) AS Y_SIGN FROM SIGN_LINE GROUP BY SIGN_ID HAVING count(*) = count( decode(SIGN_YN , 'Y' , 1))
+			) S
+			WHERE 
+				A.DOC_ID = S.SIGN_ID 
+			ORDER BY REGIST_DT desc
+  		)
+  </select>
+  <select id="getList" parameterType="Map" resultType="HashMap">
+  		SELECT * FROM ( SELECT A.*, ROWNUM RNUM FROM (
+  			SELECT DOC_ID , USER_NM, TITLE,SUB_TITLE,URL,REGIST_DT FROM (
+				SELECT VACKEY AS DOC_ID ,USER_NM AS USER_NM , '휴가신청서' AS TITLE, F_GET_CODE_NM('213',VAC_CODE) ||'('|| STARTDAY|| '~'|| ENDDAY ||')' AS SUB_TITLE , '/cms/sign/vac/view' AS URL,REGIST_DT FROM VACATION
+					UNION ALL
+				SELECT EXPENSE_ID AS DOC_ID ,USER_NM AS USER_NM , '지출결의서' AS TITLE , EXPENSE_DATE||' 내역서' AS SUB_TITLE , '/cms/sign/expense/view' AS url,REGIST_DATE AS REGIST_DT   FROM EXPENSE E 
+					UNION ALL
+				SELECT BIZ_ID AS DOC_ID ,  USER_NM AS USER_NM , '출장신청서' AS TITLE, VISITS||' '||PURPOSE||'('|| STARTDAY|| '~'|| ENDDAY ||')' AS SUB_TITLE , '/cms/sign/biztrip/view' AS URL,REGIST_DATE AS REGIST_DT  FROM BIZTRIP B 
+					UNION ALL
+				SELECT OIL_ID AS DOC_ID ,   USER_NM AS USER_NM , '유류비' AS TITLE, OIL_MONTH||' 내역서' AS SUB_TITLE , '/cms/sign/oil/view' AS URL,REGIST_DT  FROM OIL O 
+			) A , (
+				SELECT SIGN_ID , COUNT(*) AS TOT_SIGN , COUNT( DECODE(SIGN_YN , 'Y' , 1)) AS Y_SIGN FROM SIGN_LINE GROUP BY SIGN_ID HAVING COUNT(*) = COUNT( DECODE(SIGN_YN , 'Y' , 1))
+			) S
+			WHERE 
+				A.DOC_ID = S.SIGN_ID 
+			ORDER BY REGIST_DT DESC
+  		 ) A ) WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+  </select>
+  
+</mapper>

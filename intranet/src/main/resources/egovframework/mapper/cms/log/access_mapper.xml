@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="accessLogMapper">
+	<!-- 접속 로그 저장 -->
+	<insert id="insertAccessLog" parameterType="Map">
+	    <selectKey keyProperty="SN" resultType="int" order="BEFORE">
+	        SELECT ACES_LOG_SEQ.NEXTVAL  FROM  DUAL
+	    </selectKey>
+        <!-- 순번, 접근_구분, 접근_내용, 접근_일시, 로그인_ID, 접근_IP -->
+	    INSERT INTO COM_ACCES_LOG 
+	    ( SN, ACCES_SE, ACCES_CN, ACCES_DT, LOGIN_ID, ACCES_IP )
+	    VALUES 
+	    ( #{SN}, #{ACCES_SE}, #{ACCES_CN}, SYSDATE, #{LOGIN_ID}, #{ACCES_IP} )
+	</insert>
+	<sql id="accessLogListWehere">
+	    <if test="startDay != null and endDay != null">AND ACCES_DT BETWEEN TO_DATE(#{startDay},'YYYY-MM-DD') AND TO_DATE(#{endDay},'YYYY-MM-DD')+1</if>
+	    <if test="LOGIN_ID != null and LOGIN_ID != ''">AND LOGIN_ID = #{gUserId}</if>
+	    <if test="ACCES_SE != null and ACCES_SE != ''">AND ACCES_SE =  #{ACCES_SE}</if> 
+	</sql>
+	<!-- 접속 리스트 -->
+	<select id="getAccessLogList" parameterType="Map" resultType="hashMap">
+	    SELECT * FROM (
+	                SELECT ROWNUM RNUM, AA.* FROM (
+	                    SELECT SN, ACCES_CN, LOGIN_ID, ACCES_IP, ACCES_SE, DECODE(ACCES_SE,'1','최초접속','2','로그인접속') ACCES_SE_NM,
+		    TO_CHAR(ACCES_DT,'YYYY-MM-DD HH24:MI:SS') ACCES_DT
+		    FROM
+            (
+            SELECT SN, ACCES_SE, ACCES_CN, ACCES_DT, LOGIN_ID, ACCES_IP FROM COM_ACCES_LOG
+            UNION ALL
+            SELECT SN, ACCES_SE, ACCES_CN, ACCES_DT, LOGIN_ID, ACCES_IP FROM COM_ACCES_LOG_BACK
+            ) 
+		    WHERE 1 = 1
+	                    <include refid="accessLogListWehere"/>
+	                    ORDER BY SN DESC
+	                ) AA
+	            )
+	    WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+	<!-- 접속 카운트 -->
+	<select id="getAccessLogCount" parameterType="Map" resultType="int">
+	    SELECT COUNT(*) CNT
+	    FROM 
+        (
+        SELECT SN, ACCES_SE, ACCES_CN, ACCES_DT, LOGIN_ID, ACCES_IP FROM COM_ACCES_LOG
+        UNION ALL
+        SELECT SN, ACCES_SE, ACCES_CN, ACCES_DT, LOGIN_ID, ACCES_IP FROM COM_ACCES_LOG_BACK
+        )
+	    WHERE 1 = 1
+	    <include refid="accessLogListWehere"/>
+	</select>
+</mapper>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="contentsMapper">
+
+	<!-- 컨텐츠 등록 -->
+    <insert id="insertContents" parameterType="Map">
+		<selectKey resultType="int" keyProperty="CNTNTS_NO" order="BEFORE">
+			SELECT (NVL(MAX(CNTNTS_NO),0)+1) FROM COM_CNTNTS
+		</selectKey>
+		INSERT INTO COM_CNTNTS(CNTNTS_NO, CNTNTS_CN, CNTNTS_NM, FILE_ID, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID)
+		VALUES(#{CNTNTS_NO}, #{CNTNTS_CN}, #{CNTNTS_NM}, #{FILE_ID},  SYSDATE, #{gUserId}, SYSDATE, #{gUserId})
+    </insert>
+    <!-- 컨텐츠 수정 -->
+    <update id="updateContents" parameterType="Map">
+		UPDATE COM_CNTNTS SET 
+		CNTNTS_CN         = #{CNTNTS_CN},
+		CNTNTS_NM         = #{CNTNTS_NM},
+        FILE_ID           = #{FILE_ID},
+		CHANGE_DT         = SYSDATE,
+		CHANGER_ID        = #{gUserId}
+		WHERE CNTNTS_NO = #{cntnts_no}
+	</update>
+	
+	<!-- 컨텐츠 불러오기 -->
+	<select id="getContents" parameterType="Map" resultType="ClobMap">
+		SELECT A.* 
+		FROM COM_CNTNTS A, COM_MENU B 
+		WHERE A.CNTNTS_NO = B.CNTNTS_NO 
+		AND A.CNTNTS_NO   = #{cntnts_no}   
+		AND MENU_NO       = #{MENU_NO}
+	</select>
+</mapper>

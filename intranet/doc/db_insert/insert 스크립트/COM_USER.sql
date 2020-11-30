@@ -1,0 +1,9 @@
+﻿SET DEFINE OFF;
+
+Insert into com_user
+   (USER_ID, USER_NM, PASSWORD, AUTHOR_CODE, BRTHDY, TELNO, MBTLNUM, EMAIL, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID, LOGIN_FAIL_CO)
+ Values
+   ('admin', '관리자', 'dV48IQNx7N7nX7v1/POMFwgTZKxmyY5x3LgcJqB4+hQ=', '0000', '--', 
+    '02-111-111', '--', '1111@naver.com', 'Y', TO_DATE('12/04/2018 14:17:05', 'MM/DD/YYYY HH24:MI:SS'), 
+    'sgis_admin', TO_DATE('01/22/2019 23:52:26', 'MM/DD/YYYY HH24:MI:SS'), 'admin', 0);
+COMMIT;

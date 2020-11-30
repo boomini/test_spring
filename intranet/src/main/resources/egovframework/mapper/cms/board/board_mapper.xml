@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="boardMapper">
+    <!-- 게시글 목록 조건절-->
+	<sql id="boardListWhere">
+	<if test="searchWord != null and searchWord !=''">
+	   <if test='searchType == "ALL"'>
+	       AND (REGISTER_NM LIKE  '%' || #{searchWord}  || '%' OR BBSCTT_SJ LIKE '%' || #{searchWord}  || '%' OR BBSCTT_CN LIKE '%' || #{searchWord}  || '%')
+	   </if>
+	   <if test='searchType == "REGISTER_NM"'>
+	       AND REGISTER_NM LIKE  '%' || #{searchWord}  || '%'
+	   </if>
+	   <if test='searchType == "BBSCTT_SJ"'>
+	       AND BBSCTT_SJ LIKE '%' || #{searchWord}  || '%'
+	   </if>
+	   <if test='searchType == "BBSCTT_CN"'>
+	       AND BBSCTT_CN LIKE '%' || #{searchWord}  || '%'
+	   </if>
+	</if>
+	<if test="S_ANSWER_STTUS != null and S_ANSWER_STTUS !=''">
+	   AND ANSWER_STTUS = #{S_ANSWER_STTUS}
+	</if>
+	<if test=' BBS_TY == "P" '>
+	<!-- 포토 게시판은 댓글이 리스트에 포함 안되게 처리 -->
+		AND BBSCTT_NO = UPPER_BBSCTT_NO
+	</if>
+	
+	
+	</sql>
+  	<!-- 게시글 목록 -->
+	<select id="getBoardList" parameterType="Map" resultType="egovframework.common.util.ClobMap">
+		<!-- 일반형 -->
+		<if test="ANSWER_USE_AT == null or ANSWER_USE_AT ==''">
+		SELECT  C.*, DECODE(FILE_CK, NULL, 'N', 'Y') AS FILE_YN
+		 , (SELECT CODE_NM FROM COM_CODE WHERE UPPER_CODE_NO = '4' AND CODE = C.ANSWER_STTUS AND ROWNUM = 1) AS ANSWER_STTUS_NM FROM(
+		    SELECT   ROWNUM RNUM, B.*, (SELECT FILE_ID FROM COM_ATCHMNFL CC      WHERE B.FILE_ID = CC.FILE_ID) FILE_CK FROM (
+		        SELECT A.* FROM (
+		            SELECT AA.*, 'Y' NOTICE_CK FROM   COM_BBSCTT AA
+		            WHERE  BBS_NO = #{BBS_NO}
+		            AND USE_AT = 'Y'
+		            AND NOTICE_AT ='Y'
+		            <include refid="boardListWhere"/>
+		            UNION ALL
+		            SELECT BB.*, 'N' NOTICE_CK FROM   COM_BBSCTT BB
+		            WHERE BBS_NO = #{BBS_NO}
+		            AND USE_AT = 'Y'
+		            <include refid="boardListWhere"/>
+		        ) A 
+		        ORDER BY NOTICE_CK DESC, BBSCTT_NO DESC  
+		    )B    
+		) C
+		WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+		</if>
+		<!-- 댓글형 -->
+		<if test="ANSWER_USE_AT != null and ANSWER_USE_AT !=''">
+		SELECT  BB.*, DECODE(FILE_CK, NULL, 'N', 'Y') AS FILE_YN 
+		<!-- , (SELECT CODE_NM FROM COM_CODE WHERE UPPER_CODE_NO = '4' AND CODE = C.ANSWER_STTUS AND ROWNUM = 1) AS ANSWER_STTUS_NM --> FROM(
+		    SELECT ROWNUM RNUM, AA.* 
+		    ,(SELECT FILE_ID FROM COM_ATCHMNFL CC      WHERE AA.FILE_ID = CC.FILE_ID and rownum = 1) AS FILE_CK 
+		    FROM(
+		        SELECT 99 DEPTH_LEVEL, D.*, 'Y' NOTICE_CK FROM COM_BBSCTT D
+		        WHERE  BBS_NO = #{BBS_NO}
+		        AND USE_AT = 'Y'
+		        AND NOTICE_AT ='Y'
+		        <include refid="boardListWhere"/>
+		        UNION ALL
+		        SELECT C.*, 'N' NOTICE_CK FROM (
+		            SELECT LEVEL DEPTH_LEVEL  ,B.* FROM (
+		                SELECT * FROM COM_BBSCTT A
+		                WHERE  A.BBS_NO = #{BBS_NO}
+		                AND A.USE_AT = 'Y' 
+		                <include refid="boardListWhere"/>
+		            ) B
+		            START WITH B.ROOT_BBSCTT_NO= 0
+		            CONNECT BY  PRIOR B.BBSCTT_NO =  B.ROOT_BBSCTT_NO
+		            ORDER SIBLINGS BY B.UPPER_BBSCTT_NO DESC,B.BBSCTT_ORDR ASC
+		            )C
+		    )AA
+		)BB WHERE RNUM BETWEEN #{startRow} AND #{endRow} 
+		</if>
+  	</select>
+	
+	<!-- 게시글   갯수--> 
+	<select id="getBoardCount" parameterType="Map" resultType="int">
+	<!-- 일반형 -->
+    <if test="ANSWER_USE_AT == null or ANSWER_USE_AT ==''">
+        SELECT NVL(SUM(CNT),0) CNT FROM(
+           SELECT 1 CNT FROM COM_BBSCTT
+           WHERE  BBS_NO = #{BBS_NO}
+           AND USE_AT = 'Y'
+           AND NOTICE_AT ='Y'
+           <include refid="boardListWhere"/>
+           UNION ALL
+           SELECT 1 CNT FROM COM_BBSCTT
+           WHERE  BBS_NO = #{BBS_NO}
+           AND USE_AT = 'Y'
+           <include refid="boardListWhere"/>
+        )
+    </if>
+	<!-- 댓글형 -->
+	<if test="ANSWER_USE_AT != null and ANSWER_USE_AT !=''">
+        SELECT NVL(SUM(CNT),0) CNT FROM(
+            SELECT 1 CNT
+            FROM COM_BBSCTT
+            WHERE BBS_NO = #{BBS_NO}
+            AND USE_AT = 'Y'
+            AND NOTICE_AT ='Y'
+            <include refid="boardListWhere"/>
+            UNION ALL
+            SELECT 1 CNT FROM (
+                SELECT LEVEL DEPTH_LEVEL  ,B.* FROM (
+                    SELECT * FROM COM_BBSCTT A
+                    WHERE  A.BBS_NO = #{BBS_NO}
+                    AND A.USE_AT = 'Y' 
+                    <include refid="boardListWhere"/>
+                ) B
+                START WITH B.ROOT_BBSCTT_NO= 0
+                CONNECT BY  PRIOR B.BBSCTT_NO =  B.ROOT_BBSCTT_NO
+                ORDER SIBLINGS BY B.UPPER_BBSCTT_NO DESC,B.BBSCTT_ORDR ASC
+                )C
+        )
+    </if> 
+	</select>
+	
+	<!--게시글 등록  -->
+	<insert id="insertBoard" parameterType="Map">
+		<selectKey keyProperty="BBSCTT_NO" resultType="int" order="BEFORE">
+			SELECT NVL(MAX(BBSCTT_NO),0)+1  FROM  COM_BBSCTT
+		</selectKey>
+		INSERT INTO COM_BBSCTT (
+		  BBSCTT_NO, UPPER_BBSCTT_NO, ROOT_BBSCTT_NO, GROUP_BBSCTT_NO, BBSCTT_ORDR, 
+		  BBS_NO, BBSCTT_SJ, BBSCTT_CN, REGISTER_NM, 
+		  REGISTER_EMAIL, REGISTER_TELNO, REGISTER_ZIP, REGISTER_ADRES, REGISTER_ADRES_DETAIL, 
+		  BBSCTT_PASSWORD, FILE_ID, OTHBC_AT, NOTICE_AT, 
+		  USE_AT, RDCNT, REGISTER_ID, REGIST_DT, 
+		  ANSWER_STTUS
+		  )
+		VALUES (
+			#{BBSCTT_NO},
+			<if test="UPPER_BBSCTT_NO ==null or UPPER_BBSCTT_NO==''">
+			#{BBSCTT_NO},
+            </if>
+            <if test="UPPER_BBSCTT_NO !=null and UPPER_BBSCTT_NO!=''">
+            #{UPPER_BBSCTT_NO},
+            </if>
+			#{ROOT_BBSCTT_NO}, #{GROUP_BBSCTT_NO}, #{BBSCTT_ORDR},
+			#{BBS_NO}, #{BBSCTT_SJ}, #{BBSCTT_CN}, #{REGISTER_NM},
+			#{REGISTER_EMAIL}, #{REGISTER_TELNO}, #{REGISTER_ZIP}, #{REGISTER_ADRES}, #{REGISTER_ADRES_DETAIL}, 
+			#{BBSCTT_PASSWORD}, #{FILE_ID}, NVL(#{OTHBC_AT},'Y'), NVL(#{NOTICE_AT}, 'N'),
+			NVL(#{USE_AT},'Y'), 0, #{gUserId}, SYSDATE ,
+            'R'
+			)
+	</insert>
+	
+	<!-- 게시판 상세 -->
+	<select id="getBoard" parameterType="Map" resultType="egovframework.common.util.ClobMap">
+		SELECT A.*,
+		    (SELECT CODE_NM FROM COM_CODE WHERE UPPER_CODE_NO = '4' AND CODE = A.ANSWER_STTUS AND ROWNUM = 1) AS ANSWER_STTUS_NM,
+	        ANSWER_REGISTER_NM , DECODE(REGISTER_ID,'${gUserId}','_Y' , '_N') AS SELFYN
+		FROM COM_BBSCTT A WHERE BBSCTT_NO = #{BBSCTT_NO} AND BBS_NO = #{BBS_NO} AND USE_AT = 'Y'
+	</select>
+	
+	<!-- 게시판 수정 -->
+	<update id="updateBoard" parameterType="Map">
+		UPDATE COM_BBSCTT
+		<set>
+		<if test="UPPER_BBSCTT_NO !=null and UPPER_BBSCTT_NO!=''">
+			UPPER_BBSCTT_NO = #{UPPER_BBSCTT_NO},
+		</if>
+		<if test="ROOT_BBSCTT_NO !=null and ROOT_BBSCTT_NO!=''">	
+			ROOT_BBSCTT_NO = #{ROOT_BBSCTT_NO},
+		</if>
+		<if test="GROUP_BBSCTT_NO !=null and GROUP_BBSCTT_NO!=''">
+			GROUP_BBSCTT_NO = #{GROUP_BBSCTT_NO},
+		</if>
+		<if test="BBSCTT_ORDR !=null and BBSCTT_ORDR!=''">
+			BBSCTT_ORDR = #{BBSCTT_ORDR},
+		</if>
+		<if test="BBSCTT_PASSWORD !=null and BBSCTT_PASSWORD!=''">
+			BBSCTT_PASSWORD = #{BBSCTT_PASSWORD},
+		</if>
+		<if test="REGISTER_NM !=null and REGISTER_NM!=''">
+			REGISTER_NM = #{REGISTER_NM},
+		</if>
+		BBSCTT_SJ       = #{BBSCTT_SJ},
+		REGISTER_EMAIL = #{REGISTER_EMAIL},
+		REGISTER_TELNO     = #{REGISTER_TELNO},
+		BBSCTT_CN      = #{BBSCTT_CN},
+		OTHBC_AT    = NVL(#{OTHBC_AT},'Y'),
+		CHANGER_ID      = #{gUserId},
+		CHANGE_DT       = SYSDATE,
+		NOTICE_AT  = NVL(#{NOTICE_AT}, 'N'),
+		REGISTER_ZIP     = #{REGISTER_ZIP},
+		REGISTER_ADRES       = #{REGISTER_ADRES},
+		REGISTER_ADRES_DETAIL   = #{REGISTER_ADRES_DETAIL},
+		FILE_ID    = #{FILE_ID}
+		</set>
+		WHERE BBSCTT_NO   = #{BBSCTT_NO}
+  	</update>
+	
+	<!-- 답변처리 -->
+  	<update id="updateBoardReply" parameterType="Map">
+		UPDATE COM_BBSCTT
+		SET    
+		       ANSWER_REGISTER_ID      = #{ANSWER_REGISTER_ID},
+		       ANSWER_REGISTER_TELNO       = #{ANSWER_REGISTER_TELNO},
+		       ANSWER_CN        = #{ANSWER_CN},
+		       ANSWER_STTUS        = #{ANSWER_STTUS},
+		       ANSWER_REGIST_DT           = NVL(#{ANSWER_REGIST_DT},SYSDATE),
+		       ANSWER_REGISTER_NM    = #{ANSWER_REGISTER_NM}
+		WHERE  BBSCTT_NO            = #{BBSCTT_NO}
+  	</update>
+
+	<!-- 게시글 삭제 -->
+	<update id="deleteBoard" parameterType="Map">
+		UPDATE COM_BBSCTT SET
+		USE_AT          = 'N',
+		DELETE_AT          = 'N',
+		CHANGE_DT            = SYSDATE,
+		CHANGER_ID           = #{gUserId}
+		WHERE  BBSCTT_NO       = #{BBSCTT_NO}
+	</update>
+	
+	<!-- 댓글 글순서 -->
+	<select id="getMaxOrd" parameterType="Map" resultType="int">
+		SELECT NVL(MAX(BBSCTT_ORDR),-1)+1  
+		FROM COM_BBSCTT 
+		WHERE UPPER_BBSCTT_NO = #{UPPER_BBSCTT_NO} 
+		AND   GROUP_BBSCTT_NO = #{GROUP_BBSCTT_NO}
+	</select>
+  	<!-- 게시물 이전글 -->
+  	<select id="getPreView" parameterType="Map" resultType="HashMap">
+		SELECT /*+ INDEX_DESC(A COM_BBSCTT_PK)*/ * FROM COM_BBSCTT A
+		WHERE	BBSCTT_NO &lt; #{BBSCTT_NO}
+		AND USE_AT  = 'Y'
+		AND BBS_NO     = #{BBS_NO}
+		AND ROWNUM       = 1
+		<if test="OTHBC_AT !=null and OTHBC_AT !=''">
+		AND OTHBC_AT = #{OTHBC_AT}
+		</if>
+  	</select>
+
+  	<!-- 게시물 다음글 -->
+ 	<select id="getNextView" parameterType="Map" resultType="HashMap">
+		SELECT /*+ INDEX_ASC(A COM_BBSCTT_PK)*/ * FROM COM_BBSCTT A
+		WHERE BBSCTT_NO &gt; #{BBSCTT_NO}
+		AND BBS_NO     = #{BBS_NO}
+		AND USE_AT  = 'Y'
+		AND ROWNUM       = 1
+		<if test="OTHBC_AT !=null and OTHBC_AT !=''">
+		AND OTHBC_AT = #{OTHBC_AT}
+		</if>
+  	</select>
+  
+  	<!-- 조회수 증가 -->
+  	<update id="updateHit" parameterType="Map">
+		UPDATE COM_BBSCTT
+		SET    RDCNT     = NVL(RDCNT,0) + 1
+		WHERE  BBSCTT_NO      = #{BBSCTT_NO}
+  	</update>
+  
+  	<!-- 메인 게시판 목록 -->
+  	<select id="getMainBoardList" parameterType="Map" resultType="egovframework.common.util.ClobMap">  
+	    SELECT /*+ INDEX_DESC(A COM_BBSCTT_PK)*/
+	    * FROM COM_BBSCTT A
+	    WHERE BBS_NO = #{boardId}
+	    AND DELETE_AT = 'N'
+	    AND USE_AT ='Y'
+	    AND ROWNUM &lt;4
+  	</select>
+  	
+  	<select id="getReplyList" parameterType="Map" resultType="HashMap">
+  		SELECT 
+  			BBSCTT_NO , BBSCTT_CN , REGISTER_NM , DECODE(REGISTER_ID , #{gUserId},'SELF') AS SELF_YN
+  		FROM COM_BBSCTT
+		WHERE 
+			UPPER_BBSCTT_NO =#{UPPER_BBSCTT_NO}
+		AND UPPER_BBSCTT_NO != BBSCTT_NO 
+		AND DELETE_AT  IS NULL
+		ORDER BY REGIST_DT 
+  	</select>
+</mapper>

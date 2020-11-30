@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="codeMapper">
+  	<!-- 코드 조회 쿼리 -->
+  	<select id="getCodeList" parameterType="Map" resultType="HashMap">
+	    SELECT * FROM ( 
+	      SELECT LEVEL CODE_LEVEL, A.* , SUBSTR(SYS_CONNECT_BY_PATH(CODE_NM,' > '),3) CODE_PATH,
+	      (SELECT COUNT(*) FROM COM_CODE    WHERE UPPER_CODE_NO = A.CODE_NO) SUB_CNT 
+	      FROM COM_CODE A 
+	      WHERE 1 = 1
+	      <if test="USE_AT!=nul and USE_AT!=''">
+	      AND USE_AT = #{USE_AT} 
+	      </if>
+	      CONNECT BY PRIOR CODE_NO = UPPER_CODE_NO 
+	      START WITH UPPER_CODE_NO = '0'
+	      ORDER SIBLINGS BY USE_AT DESC, SORT_ORDR, CODE 
+	    )
+	    WHERE UPPER_CODE_NO = #{UPPER_CODE_NO}
+	    <if test="USE_AT!=nul and USE_AT!=''">
+			AND USE_AT = #{USE_AT} 
+	    </if> 
+  	</select>
+  	<!--  공통 코드 사용 -->
+  	<select id="getCodeUtil" parameterType="Map" resultType="HashMap">
+	    SELECT * FROM COM_CODE A
+	    WHERE UPPER_CODE_NO = #{upperCodeNo}
+	    AND   USE_AT  = 'Y'
+	    ORDER BY SORT_ORDR,CODE, REGIST_DT
+  	</select>
+  	<!-- 코드 상세 쿼리 -->
+  	<select id="getCode" parameterType="Map" resultType="HashMap">
+    	SELECT * FROM COM_CODE
+    	WHERE UPPER_CODE_NO	= #{UPPER_CODE_NO}
+        AND   CODE          = #{CODE}
+  	</select>
+  	<!-- 코드 등록 -->
+  	<insert id="insertCode" parameterType="Map">
+        <selectKey resultType="int" keyProperty="CODE_NO" order="BEFORE">
+			SELECT NVL(MAX(CODE_NO),0)+1 FROM COM_CODE
+		</selectKey>		
+        <!-- 코드_번호, 상위_코드_번호, 코드, 코드_명, 정렬_순서, 사용_여부, 등록_일시, 등록자_ID, 변경_일시, 변경자_ID -->
+        INSERT INTO COM_CODE 
+        ( CODE_NO, UPPER_CODE_NO, CODE, CODE_NM, SORT_ORDR, USE_AT, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID )
+        VALUES ( #{CODE_NO}, NVL(#{UPPER_CODE_NO},0), #{CODE},  #{CODE_NM}, (SELECT NVL(MAX(SORT_ORDR),0)+1 FROM COM_CODE WHERE UPPER_CODE_NO = NVL(#{UPPER_CODE_NO},0)), NVL(#{USE_AT},'Y'), SYSDATE, #{gUserId}, SYSDATE, #{gUserId} )
+  	</insert>
+  	<!-- 코드 수정 -->
+  	<update id="updateCode" parameterType="Map">
+        UPDATE COM_CODE
+        <set>
+        CODE            = #{CODE},      <!--코드-->
+        CODE_NM         = #{CODE_NM},   <!--코드_명-->
+        SORT_ORDR       = #{SORT_ORDR}, <!--정렬_순서-->
+        CHANGE_DT       = SYSDATE,      <!--변경_일시-->
+        CHANGER_ID      = #{gUserId},   <!--변경자_ID-->
+        </set>
+        WHERE CODE_NO   = #{CODE_NO}    <!--코드_번호--> 
+  	</update>    
+  	<!-- 코드 삭제 -->
+  	<update id="deleteCode" parameterType="Map">
+	    UPDATE COM_CODE SET
+	    USE_AT          = #{USE_AT},    <!--사용_여부-->
+	    CHANGE_DT       = #{CHANGE_DT}, <!--변경_일시-->
+        CHANGER_ID      = #{CHANGER_ID} <!--변경자_ID-->
+	    WHERE CODE_NO   = #{CODE_NO}   <!--코드_번호-->  
+  	</update>    
+  	<!-- 코드 경로 -->
+	<select id="getLocation" parameterType="Map" resultType="HashMap">
+	    SELECT LEVEL, CODE_NM, CODE_NO
+	    FROM COM_CODE A 
+	    CONNECT BY PRIOR UPPER_CODE_NO = CODE_NO  
+	    START WITH CODE_NO             = #{UPPER_CODE_NO} 
+	    ORDER BY LEVEL DESC
+  	</select>
+</mapper>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="calendarMapper">
+	
+	<select id="getList" resultType="Map" parameterType="HashMap">
+		(
+			SELECT 
+				TITLE ,
+				TO_CHAR(STARTDAY,'YYYY-MM-DD') AS STARTDAY,
+				TO_CHAR(ENDDAY,'YYYY-MM-DD') AS ENDDAY,
+				COLOR , 
+				VACKEY AS CAL_ID
+			FROM (
+				  SELECT 
+				  		V.VACKEY,
+						V.USER_NM||'-'||F_GET_CODE_NM('213',V.VAC_CODE) AS TITLE,
+						STARTDAY , 
+						CASE  WHEN STARTDAY = ENDDAY THEN ENDDAY
+						ELSE ENDDAY +1 
+						END AS ENDDAY , 
+						CASE WHEN (SELECT COUNT(*) FROM SIGN_LINE WHERE SIGN_ID  = V.VACKEY AND SIGN_YN != 'R' AND SIGN_YN != 'N' ) >0 THEN 'DONE' END AS DONE,
+						CASE MOD( ROWNUM , 5)  
+							WHEN 4 THEN 'GREEN'
+							WHEN 3 THEN 'RED'
+							WHEN 2 THEN 'BLUE'
+							WHEN 1 THEN 'PURPLE'
+							WHEN 0 THEN 'ORANGE'
+						END AS COLOR
+					FROM 
+						VACATION V 
+				  )
+			WHERE DONE = 'DONE'
+		)
+			UNION  ALL 
+		(
+			SELECT 
+				TITLE ,
+				TO_CHAR(STARTDAY,'YYYY-MM-DD') AS STARTDAY,
+				TO_CHAR(ENDDAY,'YYYY-MM-DD') AS ENDDAY,
+				COLOR , 
+				BIZ_ID AS CAL_ID
+			FROM (
+				  SELECT 
+				  		B.BIZ_ID,
+						USER_NM||'-'||VISiTS||'-'||PURPOSE AS TITLE,
+						STARTDAY , 
+						CASE  WHEN STARTDAY = ENDDAY THEN ENDDAY ELSE ENDDAY +1 END AS ENDDAY , 
+						CASE WHEN (SELECT COUNT(*) FROM SIGN_LINE WHERE SIGN_ID  = B.BIZ_ID AND SIGN_YN != 'R' AND SIGN_YN != 'N' ) >0 THEN 'DONE' END AS DONE,
+						CASE MOD( ROWNUM , 5)  
+							WHEN 4 THEN 'RED'
+							WHEN 3 THEN 'GREEN'
+							WHEN 2 THEN 'ORANGE'
+							WHEN 1 THEN 'BLUE'
+							WHEN 0 THEN 'PURPLE'
+						END AS COLOR
+					FROM 
+						BIZTRIP B
+				  )
+			WHERE DONE = 'DONE'
+		)
+		UNION ALL
+		(
+		SELECT 
+		USER_NM||'-'||PURPOSE AS TITLE,
+		TO_CHAR(STARTDAY,'YYYY-MM-DD') AS STARTDAY,
+		TO_CHAR(CASE  WHEN STARTDAY = ENDDAY THEN ENDDAY ELSE ENDDAY +1 END,'YYYY-MM-DD') AS ENDDAY,
+		CASE MOD( ROWNUM , 5)  
+			WHEN 4 THEN 'RED'
+			WHEN 3 THEN 'GREEN'
+			WHEN 2 THEN 'ORANGE'
+			WHEN 1 THEN 'BLUE'
+			WHEN 0 THEN 'PURPLE'
+		END AS COLOR ,
+		CAL_ID
+		FROM CALENDAR c 
+		)
+	</select>
+	<insert id="insert" parameterType="Map">
+		<selectKey resultType="string" keyProperty="CAL_ID" order="BEFORE">
+			SELECT 'CAL_'||CALENDAR_SEQ.NEXTVAL AS CAL_ID FROM DUAL
+	  	</selectKey>
+		INSERT INTO CALENDAR
+			(CAL_ID, STARTDAY, ENDDAY, USER_NM, PURPOSE, REGISTER, REGIST_DATE)
+		VALUES
+			(
+			#{CAL_ID},#{STARTDAY},#{ENDDAY},#{USER_NM},#{PURPOSE},#{gUserId},SYSDATE
+			)
+	</insert>
+	<update id="update" parameterType="Map">
+	UPDATE CALENDAR
+		SET 
+		STARTDAY=#{STARTDAY}, 
+		ENDDAY=#{ENDDAY}, 
+		USER_NM=#{USER_NM}, 
+		PURPOSE=#{PURPOSE}, 
+		UPDATER=#{gUserId}, 
+		UPDATE_DATE=SYSDATE
+		WHERE CAL_ID=#{CAL_ID}
+	</update>
+	<delete id="delete" parameterType="Map">
+	DELETE FROM CALENDAR
+		WHERE CAL_ID=#{CAL_ID}
+	</delete>
+	<select id="get" parameterType="Map" resultType="HashMap">
+		SELECT 
+			CAL_ID ,TO_CHAR(STARTDAY,'YYYY-MM-DD') AS STARTDAY,TO_CHAR(ENDDAY,'YYYY-MM-DD') AS ENDDAY  ,USER_NM ,PURPOSE 
+		FROM CALENDAR C 
+		WHERE CAL_ID=#{CAL_ID}
+	</select>
+</mapper>

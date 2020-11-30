@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="popupMapper">
+	<!-- 팝업 리스트 조건 -->
+	<sql id="popupListWhere">
+	   <if test="searchWord != null and searchWord !=''">
+            <choose>
+                <when test='searchType == "0"'><!-- 전체 -->
+                AND ( POPUP_NM LIKE '%'||#{searchWord}||'%' OR
+                      LINK_URL LIKE '%'||#{searchWord}||'%'
+                    )
+                </when>
+                <when test='searchType == "1"'><!-- 팝업명 -->
+                AND POPUP_NM LIKE '%'||#{searchWord}||'%'
+                </when>
+                <when test='searchType == "2"'><!-- 링크 -->
+                AND LINK_URL LIKE '%'||#{searchWord}||'%'
+                </when>
+            </choose>
+        </if>
+	</sql>
+	
+	<!-- 팝업리스트 -->
+	<select id="getPopupList" parameterType="Map" resultType="ClobMap">
+		SELECT B.* FROM(
+			SELECT A.*,ROWNUM NUM
+			FROM (
+				SELECT  POPUP_NO, POPUP_NM, LINK_URL, SORT_ORDR,USE_AT, OUTPT_LC_XAXS, OUTPT_LC_YAXS,
+	                    TO_CHAR(TO_DATE(BEGIN_DE,'yyyy-mm-dd'),'yyyy-mm-dd') BEGIN_DE,
+	                    TO_CHAR(TO_DATE(END_DE,'yyyy-mm-dd'),'yyyy-mm-dd') END_DE,
+	                    (
+	                      CASE WHEN TRIM(USE_AT) = 'Y' AND TO_NUMBER(TO_CHAR(SYSDATE,'YYYYMMDD')) BETWEEN TO_NUMBER(REPLACE(BEGIN_DE,'-')) AND TO_NUMBER(REPLACE(END_DE,'-')) THEN 'Y'
+	                        ELSE 'N' END
+	                    ) STATE,
+	                    POPUP_AR, POPUP_HG
+				FROM COM_POPUP A
+	          WHERE 1 = 1
+	          <include refid="popupListWhere"/>
+	          ORDER BY STATE DESC,POPUP_NO DESC
+			)A
+		)B
+    WHERE NUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+
+	<!-- 팝업 카운트 -->
+	<select id="getPopupCount" parameterType="Map" resultType="int">
+	    SELECT COUNT(*) CNT 
+	    FROM COM_POPUP A
+	    WHERE 1 = 1
+	    <include refid="popupListWhere"/>
+	</select>
+
+	<!-- 팝업등록 -->
+	<insert id="insertPopup" parameterType="Map">
+		<selectKey resultType="int" keyProperty="POPUP_NO" order="BEFORE">
+			SELECT NVL(MAX(POPUP_NO),0)+1 FROM COM_POPUP
+		</selectKey>
+		INSERT INTO COM_POPUP(POPUP_NO, POPUP_NM, OUTPT_LC_XAXS, OUTPT_LC_YAXS, BEGIN_DE, END_DE, USE_AT, SORT_ORDR, POPUP_CN, LINK_URL, FILE_ID, POPUP_AR, POPUP_HG, POPUP_TY, REGIST_DT, REGISTER_ID, CHANGE_DT, CHANGER_ID, AUTH_GROP)
+		VALUES(#{POPUP_NO}, #{POPUP_NM}, #{OUTPT_LC_XAXS}, #{OUTPT_LC_YAXS}, #{startDay}, #{endDay}, #{USE_AT}, #{SORT_ORDRer}, #{POPUP_CN}, #{LINK_URL}, #{FILE_ID}, #{POPUP_AR}, #{POPUP_HG}, NVL(#{POPUP_TY},'N'), SYSDATE, #{gUserId}, SYSDATE, #{gUserId} ,#{AUTH_GROP})
+	</insert>
+
+	<!-- 팝업 상세보기 -->
+	<select id="getPopup" parameterType="Map" resultType="ClobMap">
+		SELECT A.*,
+		(
+			CASE WHEN TRIM(USE_AT) = 'Y' AND TO_NUMBER(TO_CHAR(SYSDATE,'YYYYMMDD')) BETWEEN TO_NUMBER(REPLACE(BEGIN_DE,'-')) AND TO_NUMBER(REPLACE(END_DE,'-')) THEN 'Y'
+            ELSE 'N' END
+		) STATE
+		FROM COM_POPUP A
+		WHERE POPUP_NO = #{POPUP_NO}
+	</select>
+
+	<!--팝업 수정  -->
+	<update id="updatePopup" parameterType="Map">
+		UPDATE COM_POPUP SET 
+		POPUP_NM          = #{POPUP_NM},
+		OUTPT_LC_XAXS     = #{OUTPT_LC_XAXS},
+		OUTPT_LC_YAXS     = #{OUTPT_LC_YAXS},
+		BEGIN_DE          = #{startDay},
+		END_DE            = #{endDay},
+		USE_AT	          = #{USE_AT},
+		SORT_ORDR         = #{SORT_ORDRer},
+		POPUP_CN          = #{POPUP_CN},
+		<if test="FILE_ID != null and FILE_ID !=''">
+		FILE_ID           = #{FILE_ID},
+		</if>
+		<if test='filename_del_yn == "Y"'>
+		FILE_ID           = '',
+		</if>
+		LINK_URL        = #{LINK_URL},
+		POPUP_AR        = #{POPUP_AR},
+		POPUP_HG        = #{POPUP_HG},
+		POPUP_TY        = #{POPUP_TY},
+		AUTH_GROP       = #{AUTH_GROP},
+        CHANGE_DT       = SYSDATE,          <!--변경일시-->
+        CHANGER_ID      = #{gUserId}        <!--변경자ID-->
+		WHERE POPUP_NO  = #{POPUP_NO}
+	</update>
+
+	<!-- 팝업 삭제 -->
+	<delete id="deletePopup" parameterType="Map">
+		DELETE FROM COM_POPUP 
+	    <if test="seqs !=null and seqs !=''">
+	         <foreach collection="seqs" item="item" open="WHERE POPUP_NO IN (" close=")" separator=",">
+	            TRIM(#{item})
+	         </foreach>
+	     </if>
+	     <if test='seqs ==null and seqs ==""'>
+	     WHERE 1=9
+	     </if>
+	</delete>
+  
+    <!-- 팝업리스트 -->
+    <select id="mainPopupList" parameterType="Map" resultType="ClobMap">
+      SELECT *
+      FROM (
+          SELECT A.*,
+          (
+              CASE WHEN TRIM(USE_AT) = 'Y' AND TO_NUMBER(TO_CHAR(SYSDATE,'YYYYMMDD')) BETWEEN TO_NUMBER(REPLACE(BEGIN_DE,'-')) AND TO_NUMBER(REPLACE(END_DE,'-')) THEN 'Y'
+          ELSE 'N' END
+          ) STATE
+          FROM COM_POPUP A
+      )
+      WHERE STATE = 'Y'
+      AND AUTH_GROP LIKE '%'||#{GROUP_ID}||'%'
+  </select>
+  
+  <!-- 골프장 농약 사용량/잔류량 입력항목 가이드 팝업 엑셀 다운로드 -->
+  <select id="getGolfExcelDownList" parameterType="Map" resultType="java.util.LinkedHashMap">
+  	SELECT                                                                            
+		  PESTICIDE_NO, PESTICIDE_NAME, PLACE_CODE, SHAPE_CODE, POISON_CODE,              
+		  FISH_TOXICITY_CODE, USE_CODE, REG_COMPANY, INGREDIENTS_KOR_NAME_1,    
+		  INGREDIENTS_ENG_NAME_1, INGREDIENTS_PER_1,INGREDIENTS_KOR_NAME_2, 
+		  INGREDIENTS_ENG_NAME_2, INGREDIENTS_PER_2, INGREDIENTS_KOR_NAME_3,
+		  INGREDIENTS_ENG_NAME_3, INGREDIENTS_PER_3, INGREDIENTS_KOR_NAME_4,
+		  INGREDIENTS_ENG_NAME_4, INGREDIENTS_PER_4,CROP_GUBUN                           
+	  FROM GP_PESTICIDE_POPUP
+  </select>
+
+</mapper>

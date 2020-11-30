@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="boardCfgMapper">
+
+    <sql id="boardCfgWhere">
+        <where>
+            USE_AT = #{pUSE_AT}
+        <if test="pBBS_TY != null and pBBS_TY !=''">
+            AND BBS_TY = #{pBBS_TY}
+        </if>
+        
+        <if test='pSCH_VALUE != null and pSCH_KEY == "0"'>
+            AND BBS_NM LIKE '%'||#{pSCH_VALUE}||'%'
+        </if>
+        </where>
+    </sql>
+    <!-- 게시판 리스트 -->
+    <select id="getBoardCfgList" parameterType="Map" resultType="HashMap">
+       SELECT   *  FROM (
+            SELECT
+            /*+ INDEX (A COM_BBS_PK)*/ BBS_NO, ROWNUM RNUM, BBS_NM, BBS_TY, WBDETR_USE_AT,   ANSWER_USE_AT, BBS_DC, NTCSNT_USE_AT,SCRSNT_USE_AT,
+            F_GET_CODE_NM('3',BBS_TY) AS BBS_TY_NM
+            FROM COM_BBS A
+            <include refid="boardCfgWhere"/>
+            )
+            WHERE   RNUM BETWEEN #{startRow} AND #{endRow}
+    </select>
+    <!-- 게시판 카운트 -->
+    <select id="getBoardCfgCount" parameterType="Map" resultType="int">
+        SELECT COUNT(*) CNT 
+        FROM COM_BBS A
+        <include refid="boardCfgWhere"/>
+    </select>
+    <!--게시판 상세보기  -->
+    <select id="getBoardCfg" parameterType="Map" resultType="egovframework.common.util.ClobMap">
+        SELECT *  FROM COM_BBS 
+        WHERE BBS_NO = #{BBS_NO}
+    </select>
+	<!-- 게시판 등록 -->
+	<insert id="insertBoardCfg" parameterType="Map">
+		<selectKey keyProperty="BBS_NO" resultType="int" order="BEFORE">
+			SELECT NVL(MAX(BBS_NO),0)+1  FROM  COM_BBS
+		</selectKey>
+        <!-- 게시판_번호, 게시판_명, 게시판_설명, 게시판_유형, 업로드_가능_여부, 
+        업로드_제한_갯수, 업로드_가능_사이즈, 웹에디터_사용_여부, 비밀글_사용_여부, 공지글_사용_여부, 
+        댓글_사용_여부, 사용_여부, 삭제_여부, 등록_일시, 등록자_ID, 
+        변경_일시, 변경자_ID -->
+        INSERT INTO COM_BBS 
+            ( BBS_NO, BBS_NM, BBS_DC, BBS_TY, UPLOAD_POSBL_AT, 
+            UPLOAD_LMTT_CO, UPLOAD_POSBL_SIZE, WBDETR_USE_AT, SCRSNT_USE_AT, NTCSNT_USE_AT, 
+            ANSWER_USE_AT, USE_AT, DELETE_AT, REGIST_DT, REGISTER_ID, 
+            CHANGE_DT, CHANGER_ID )
+        VALUES 
+            ( #{BBS_NO}, #{BBS_NM}, #{BBS_DC}, #{BBS_TY}, #{UPLOAD_POSBL_AT}, 
+            #{UPLOAD_LMTT_CO}, #{UPLOAD_POSBL_SIZE}, #{WBDETR_USE_AT}, #{SCRSNT_USE_AT}, #{NTCSNT_USE_AT}, 
+            #{ANSWER_USE_AT}, 'Y', #{DELETE_AT}, SYSDATE, #{gUserId}, 
+            SYSDATE, #{gUserId} )
+	</insert>
+	<!-- 게시판 수정 -->
+	<update id="updateBoardCfg" parameterType="Map">
+		UPDATE COM_BBS
+		SET
+		       BBS_NM             = #{BBS_NM},
+		       BBS_TY             = #{BBS_TY},
+		       BBS_DC             = #{BBS_DC},
+		       UPLOAD_POSBL_AT    = #{UPLOAD_POSBL_AT},
+		       UPLOAD_LMTT_CO     = #{UPLOAD_LMTT_CO},
+		       UPLOAD_POSBL_SIZE  = #{UPLOAD_POSBL_SIZE},
+		       WBDETR_USE_AT      = #{WBDETR_USE_AT},
+		       SCRSNT_USE_AT      = #{SCRSNT_USE_AT},
+		       NTCSNT_USE_AT      = #{NTCSNT_USE_AT},
+		       CHANGE_DT          = SYSDATE,
+		       CHANGER_ID         = #{gUserId},
+		       ANSWER_USE_AT      = #{ANSWER_USE_AT}
+		WHERE  BBS_NO             = #{BBS_NO}
+	</update>
+	<!-- 게시판 사용여부  -->
+	<update id="deleteBoardCfg" parameterType="Map">
+		UPDATE COM_BBS
+		SET
+		       USE_AT         = #{USE_AT},
+               CHANGE_DT      = SYSDATE,
+               CHANGER_ID     = #{gUserId}
+        WHERE BBS_NO IN
+		<foreach collection="blbdArr" item="item" open="(" close=")" separator=",">
+		    ${item}
+		</foreach>
+	</update>
+	<!--팝업게시판 리스트  -->
+	<select id="getPopBoardList" parameterType="Map" resultType="HashMap">
+		SELECT /*+ INDEX (A COM_BBS_PK)*/BBS_NO, BBS_NM, BBS_TY, WBDETR_USE_AT,   
+        ANSWER_USE_AT, BBS_DC, F_GET_CODE_NM('3',BBS_TY) AS BBS_TY_NM
+		FROM COM_BBS A 
+		WHERE USE_AT = #{USE_AT} 
+	</select>
+	
+</mapper>

@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- SELECT * FROM ( SELECT A.*, ROWNUM RNUM FROM (
+  ) A ) WHERE RNUM BETWEEN #{startRow} AND #{endRow} -->
+<mapper namespace="oilMapper">
+
+  <select id="getListCount" parameterType="Map" resultType="int">
+  		<![CDATA[
+  		SELECT COUNT(*) FROM (
+  		
+  		
+  		SELECT ROWNUM AS RS , OIL_ID ,  USER_NM , STEP ,oil_month  , SUBMITYN FROM (
+  			SELECT OIL_ID , USER_NM,  oil_month ,SUBMITYN , STEP FROM (
+							SELECT 
+								SIGN_ID , LINE_ID  , SIGN_YN , OIL_ID , USER_NM , CAR_NUM ||'-'||CAR_NM , oil_month , 
+								NVL( (SELECT SL.SIGN_YN FROM SIGN_LINE SL WHERE SL.SIGN_ID = S.SIGN_ID AND SL.SIGN_ORDER = (S.SIGN_ORDER-1)) , 'Y')AS PRESIGN,
+								F_GET_CODE_NM('219',SIGN_YN) AS STEP , 
+								 CAR_NUM ||'-'||CAR_NM AS CAR_NM ,
+								 '' AS SUBMITYN
+							FROM SIGN_LINE S , OIL O
+							WHERE OIL_ID = SIGN_ID 
+			      				AND S.LINE_ID=#{gUserId}
+			      				AND O.SUBMITYN = 'Y'
+				  			)
+				  			 WHERE SIGN_YN = 'N'
+				  			 AND PRESIGN='Y'
+							UNION ALL 
+					 SELECT 
+					 	   OIL_ID , USER_NM,  DECODE( SUBMITYN , 'N','임시저장') AS SUBMITYN , oil_month,
+					 	   CASE WHEN
+					 	   		COUNT(*) =  COUNT( DECODE(SIGN_YN,'Y',1)  ) THEN '결재 완료'
+					 	   		WHEN
+					 	   		COUNT( DECODE(SIGN_YN,'R',1)  ) > 0 THEN  '반려'
+					 	   		ELSE
+					 	   		 '결재 대기'
+					 	   	END AS STEP	 
+					  FROM OIL O , SIGN_LINE S  
+					 WHERE 
+						  O.OIL_ID = S.SIGN_ID
+					   AND REGISTER=#{gUserId}
+					 GROUP BY OIL_ID , USER_NM ,  SUBMITYN ,oil_month
+  			)
+		
+  		
+  		 )
+		]]>
+  </select>
+  <select id="getList" parameterType="Map" resultType="HashMap">
+  <![CDATA[
+  		SELECT * FROM ( SELECT A.*, ROWNUM RNUM FROM (
+  		SELECT ROWNUM AS RS , OIL_ID ,  USER_NM , STEP ,oil_month  , SUBMITYN FROM (
+  			SELECT OIL_ID , USER_NM, SUBMITYN ,  oil_month , STEP FROM (
+							SELECT 
+								SIGN_ID , LINE_ID  , SIGN_YN , OIL_ID , USER_NM , CAR_NUM ||'-'||CAR_NM , oil_month , 
+								NVL( (SELECT SL.SIGN_YN FROM SIGN_LINE SL WHERE SL.SIGN_ID = S.SIGN_ID AND SL.SIGN_ORDER = (S.SIGN_ORDER-1)) , 'Y')AS PRESIGN,
+								F_GET_CODE_NM('219',SIGN_YN) AS STEP , 
+								 CAR_NUM ||'-'||CAR_NM AS CAR_NM ,
+								 '' AS SUBMITYN
+							FROM SIGN_LINE S , OIL O
+							WHERE OIL_ID = SIGN_ID 
+			      				AND S.LINE_ID=#{gUserId}
+			      				AND O.SUBMITYN = 'Y'
+				  			)
+				  			 WHERE SIGN_YN = 'N'
+				  			 AND PRESIGN='Y'
+							UNION ALL 
+					 SELECT 
+					 	   OIL_ID , USER_NM,  DECODE( SUBMITYN , 'N','임시저장') AS SUBMITYN , oil_month,
+					 	   CASE WHEN
+					 	   		COUNT(*) =  COUNT( DECODE(SIGN_YN,'Y',1)  ) THEN '결재 완료'
+					 	   		WHEN
+					 	   		COUNT( DECODE(SIGN_YN,'R',1)  ) > 0 THEN  '반려'
+					 	   		ELSE
+					 	   		 '결재 대기'
+					 	   	END AS STEP	 
+					  FROM OIL O , SIGN_LINE S  
+					 WHERE 
+						  O.OIL_ID = S.SIGN_ID
+					   AND REGISTER=#{gUserId}
+					 GROUP BY OIL_ID , USER_NM ,  SUBMITYN ,oil_month
+  			)
+		 ) A ) WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+		]]>
+  </select>
+  
+  <insert id="insert" parameterType="Map">
+	  <selectKey resultType="string" keyProperty="OIL_ID" order="BEFORE">
+				SELECT 'OIL_'||#{gUserId}||'_'||#{OIL_MONTH} AS OIL_ID FROM DUAL
+	  </selectKey>
+		  INSERT INTO OIL (OIL_ID, USER_NM, CAR_NUM, CAR_NM, CAR_ENGINE, CAR_OIL, REGIST_DT, REGISTER, OIL_MONTH , SUBMITYN , CAR_KM , OIL_PRI)
+		  VALUES(#{OIL_ID},#{USER_NM},#{CAR_NUM},#{CAR_NM},#{CAR_ENGINE},#{CAR_OIL},SYSDATE,#{gUserId},#{OIL_MONTH} , #{SUBMITYN} , #{CAR_KM} , #{OIL_PRI} )
+  </insert>
+  <delete id="deleteList" parameterType="Map">
+  	DELETE FROM OIL_LIST WHERE OIL_ID=#{OIL_ID} 
+  </delete>
+  <insert id="insertLine" parameterType="Map">
+  	INSERT INTO SIGN_LINE
+			(SIGN_ID, LINE_ID, SIGN_YN, SIGN_ORDER)
+	VALUES(#{OIL_ID},#{LINE_ID},'N',#{SIGN_ORDER})
+  </insert>
+  <insert id="insertList" parameterType="Map">
+  	INSERT INTO OIL_LIST
+		(OIL_ID, OIL_D_ID, D_DT, D_FROM, D_TO, D_MID, DISTANCE, COST, PARK_C, REGIST_DT, REGISTER )
+  VALUES(
+  #{OIL_ID},#{OIL_D_ID},#{D_DT},#{D_FROM},#{D_TO},#{D_MID},#{DISTANCE},#{COST},#{PARK_C},SYSDATE,#{gUserId}
+  )
+  	
+  </insert>
+  
+  <select id="getMemberList" parameterType="Map" resultType="HashMap">
+		SELECT USER_ID , USER_NM||' '||F_GET_CODE_NM('50',AUTHOR_CODE) AS USERNM
+		FROM COM_USER
+		WHERE AUTHOR_CODE!=9999
+		  AND USER_ID != #{gUserId}
+  </select>
+  <select id="getMember"  parameterType="Map" resultType="HashMap">
+	  SELECT 
+			F_GET_CODE_NM('206',ORG_CODE) AS ORG,
+			F_GET_CODE_NM('50',AUTHOR_CODE) AS AUTH,
+			DECODE(MBTLNUM ,'--',TELNO , MBTLNUM) AS PNUM,
+			USER_NM
+			FROM COM_USER
+		WHERE
+			USER_ID = #{gUserId}
+  </select>
+  <select id="getOil"  parameterType="Map" resultType="HashMap">
+  
+		SELECT 
+			   OIL_ID, USER_NM, CAR_NUM, CAR_NM, CAR_ENGINE, CAR_OIL , SUBMITYN,CAR_KM,OIL_PRI,
+			   OIL_MONTH,
+			   F_GET_CODE_NM('236',CAR_OIL) AS CAR_OIL_NM,
+		       DECODE(REGISTER ,#{gUserId}, 'SELF' , 'SIGN' ) AS E_MODE,
+	           (SELECT COUNT(*) FROM SIGN_LINE WHERE SIGN_YN='N' AND SIGN_ID = #{OIL_ID} ) AS SIGN_COUNT
+		 FROM OIL O
+		WHERE OIL_ID = #{OIL_ID} 
+  </select>
+  <select id="getSignLineList" parameterType="Map" resultType="HashMap">
+	  SELECT 
+			LINE_ID , USER_NM ,  
+			F_GET_CODE_NM('219',SIGN_YN) AS SIGN_STEP,
+			F_GET_CODE_NM('50',AUTHOR_CODE) AS AUTO_NM
+		FROM SIGN_LINE , COM_USER		
+		WHERE
+			SIGN_ID = #{OIL_ID}
+		AND LINE_ID = USER_ID
+		ORDER BY SIGN_ORDER
+  </select>	
+	<update id="update" parameterType="Map">
+		UPDATE OIL
+			SET 
+			CAR_NUM=#{CAR_NUM}, 
+			CAR_NM=#{CAR_NM}, 
+			CAR_ENGINE=#{CAR_ENGINE}, 
+			CAR_OIL=#{CAR_OIL}, 
+			UPDATE_DT=SYSDATE, 
+			UPDATER=#{gUserId}, 
+			OIL_MONTH=#{OIL_MONTH}, 
+			SUBMITYN=#{SUBMITYN},
+			CAR_KM=#{CAR_KM},
+			OIL_PRI=#{OIL_PRI}
+		WHERE OIL_ID=#{OIL_ID}
+		
+	</update>	
+	<delete id="deleteLine" parameterType="Map">
+		DELETE FROM SIGN_LINE WHERE SIGN_ID = #{OIL_ID}
+	</delete>
+	<delete id="deleteVac" parameterType="Map">
+		DELETE FROM EXPENSE WHERE EXPENSE_ID = #{EXPENSE_ID}
+	</delete>
+	<update id="sign" parameterType="Map">
+		UPDATE SIGN_LINE SET
+				SIGN_YN = #{SIGN_YN},
+				SIGN_DT = SYSDATE
+		 WHERE
+				SIGN_ID = #{OIL_ID} 
+			AND LINE_ID = #{gUserId}
+	</update>
+	<select id="getOilList" parameterType="Map" resultType="HashMap">
+		SELECT 
+			OIL_ID, OIL_D_ID, TO_CHAR(D_DT,'YYYY-MM-DD') AS D_DT, D_FROM, D_TO, D_MID, DISTANCE, COST, PARK_C
+		FROM OIL_LIST
+		WHERE OIL_ID = #{OIL_ID}
+		ORDER BY D_DT 
+	</select>
+	<select id="getTot" parameterType="Map" resultType="HashMap">
+		SELECT 
+				DISTANCE||'KM' AS DISTANCE  ,
+				DISTANCE_CAL||'KM' AS DISTANCE_CAL,
+				CAR_KM||'KM/L' AS CAR_KM,
+				OIL_PRI||'원/L'AS OIL_PRI,
+				OIL_TOT||'원' AS OIL_TOT,
+				COST||'원' AS COST,
+				PARK_C||'원' AS PARK_C, 
+				(OIL_TOT + COST + PARK_C)||'원' AS TOT
+			FROM (
+				SELECT 
+						A.OIL_ID , A.CAR_KM  , A.OIL_PRI ,B.DISTANCE , (B.DISTANCE*1.2) AS DISTANCE_CAL , 
+						( (B.DISTANCE*1.2 / A.CAR_KM) * A.OIL_PRI ) AS OIL_TOT 
+						,  B.COST , B.PARK_C 
+					FROM 
+						(
+						SELECT 
+								OIL_ID , CAR_KM  , OIL_PRI 
+							FROM OIL
+							WHERE OIL_ID  = #{OIL_ID}
+						) A  ,
+						(
+							SELECT
+									OIL_ID , 
+									SUM(DISTANCE) AS DISTANCE,
+									SUM(COST) AS COST,
+									SUM(PARK_C ) AS PARK_C
+								FROM OIL_LIST OL
+								WHERE 
+									OIL_ID  = #{OIL_ID}
+								GROUP  BY OIL_ID
+						) B
+				)	 
+	</select>
+</mapper>

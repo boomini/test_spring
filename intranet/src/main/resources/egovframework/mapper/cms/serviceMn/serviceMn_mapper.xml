@@ -1,0 +1,669 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="serviceMnMapper">
+    <!-- 측정망 입력항목 관리 설정 리스트 -->
+    <select id="getMesureInputItemMnList" parameterType="Map" resultType="HashMap">
+        SELECT YEAR,
+        DECODE (QUARTER,  'H1', '상반기',  'H2', '하반기') AS QUARTER_NM,
+        QUARTER, TARGET_GBN, USE_TARGET,
+        COUNT(*) CNT
+        FROM IC_GROUP
+        WHERE TARGET_GBN   = #{pTargetGbn}
+        AND USE_TARGET     = #{pUseTarget}
+        GROUP BY YEAR, QUARTER, USE_TARGET, TARGET_GBN
+        ORDER BY YEAR DESC, QUARTER
+    </select>
+    
+    <!-- 측정망 등록항목  리스트 -->
+    <select id="getMainMesureInputItemMnList" parameterType="Map" resultType="HashMap">
+        SELECT   
+        YEAR, QUARTER, A.IC_CODE, USE_TARGET, THRESHOLDS_B,  TH_UNIT, THRESHOLDS, TH_UNIT_B, TARGET_GBN, UNEXPECT_VAL, TH_UNIT2, IC_ORDR,
+        DECODE(THRESHOLDS_B_2, '-9999', '불검출',RTRIM(TO_CHAR(THRESHOLDS_B_2, 'FM9990D99'), '.')) THRESHOLDS_B_2,
+        DECODE(THRESHOLDS_2, '-9999', '불검출',RTRIM(TO_CHAR(THRESHOLDS_2, 'FM9990D99'), '.')) THRESHOLDS_2,
+        DECODE(UNEXPECT_VAL_2, '-9999', '불검출',RTRIM(TO_CHAR(UNEXPECT_VAL_2, 'FM9990D99'), '.')) UNEXPECT_VAL_2,
+        IC_NAME_KOR, IC_NAME_ENG, IC_GUBUN,
+         DECODE (IC_GUBUN,
+                 '1', '일반',
+                 '2', '특정',
+                 '3', '후보')
+        AS IC_GUBUN_NM 
+        FROM IC_GROUP A, IC_INFO B
+        WHERE   A.IC_CODE      = B.IC_CODE
+        AND     YEAR           = #{pYear}
+        AND     TARGET_GBN     = #{pTargetGbn}
+        AND     QUARTER        = #{pQuarter}
+        AND     USE_TARGET     = #{pUseTarget} 
+        ORDER BY IC_ORDR, IC_NAME_ENG, IC_NAME_KOR
+    </select>
+    
+     <!--주성분 삭제  -->
+    <delete id="deleteMainMesureInputItem" parameterType="Map">
+        DELETE FROM IC_GROUP
+        WHERE   YEAR           = #{YEAR}
+        AND     TARGET_GBN     = #{TARGET_GBN}
+        AND     QUARTER        = #{QUARTER}
+        AND     USE_TARGET     = #{USE_TARGET}
+    </delete>
+    
+    <!--주성분 저장  -->
+    <insert id="insertMainMesureInputItem" parameterType="Map">
+        <!-- 년도, 반기구분, 항목코드, 1:음용,2:비음용, 기준치값1, 기준치값2, , 범위시작, 범위종료, , 구분(GW:지하수, ...), , ,  -->
+        INSERT INTO IC_GROUP 
+        ( YEAR, QUARTER, IC_CODE, USE_TARGET, THRESHOLDS_B, THRESHOLDS_B_2, TH_UNIT, THRESHOLDS, THRESHOLDS_2, TH_UNIT_B, TARGET_GBN, UNEXPECT_VAL, UNEXPECT_VAL_2, TH_UNIT2, IC_ORDR )
+        VALUES ( #{YEAR}, #{QUARTER}, #{IC_CODE}, #{USE_TARGET}, #{THRESHOLDS_B}, DECODE(#{THRESHOLDS_B_2},'불검출','-9999',#{THRESHOLDS_B_2}), #{TH_UNIT}, #{THRESHOLDS}, DECODE(#{THRESHOLDS_2},'불검출','-9999',#{THRESHOLDS_2}), #{TH_UNIT_B}, #{TARGET_GBN}, #{UNEXPECT_VAL}, DECODE(#{UNEXPECT_VAL_2},'불검출','-9999',#{UNEXPECT_VAL_2}), #{TH_UNIT2}, #{IC_ORDR} )
+    </insert>
+    
+    <!-- 측정항목 조회 조건 -->
+    <sql id="mesureItemWhere">
+        <if test="searchWord != null and searchWord !=''">
+            <if test='searchType == "KO"'>
+            AND IC_NAME_KOR LIKE '%'||#{searchWord}||'%'
+            </if>
+            <if test='searchType == "ENG"'>
+            AND IC_NAME_ENG LIKE '%'||#{searchWord}||'%'
+            </if>
+        </if>
+        <if test="pIcGubun != null and pIcGubun !=''">
+            AND IC_GUBUN = #{pIcGubun}
+        </if>
+    </sql>        
+    <!-- 측정항목 조회 목록 -->
+    <select id="getMesureItemList" parameterType="Map" resultType="HashMap">
+        SELECT * FROM (
+            SELECT AA.*, ROWNUM RNUM
+                FROM (
+                SELECT A.*,
+                DECODE (IC_GUBUN, '1', '일반', '2', '특정', '3', '후보') AS IC_GUBUN_NM 
+                FROM IC_INFO A
+                WHERE 1 = 1
+                <include refid="mesureItemWhere"/> 
+                ORDER BY IC_NAME_KOR, IC_NAME_ENG
+                ) AA
+        )
+        WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+    </select>
+    <!-- 측정항목 조회 총 카운트 -->
+    <select id="getMesureItemCount" parameterType="Map" resultType="int">
+        SELECT COUNT(*) CNT
+        FROM IC_INFO
+        WHERE 1 = 1
+        <include refid="mesureItemWhere"/>
+    </select>    
+    
+    
+    <!-- 측정항목 등록 -->
+    <insert id="insertmesureItem" parameterType="Map">
+        <selectKey resultType="int" keyProperty="IC_CODE" order="BEFORE">
+            SELECT LPAD(NVL(MAX(IC_CODE),0)+1,5,0) FROM IC_INFO
+        </selectKey>
+        <!-- 코드번호, 품목명(한글), 품목명(영어), 구분 -->
+        INSERT INTO IC_INFO 
+        ( IC_CODE, IC_NAME_KOR, IC_NAME_ENG, IC_GUBUN )
+        VALUES ( #{IC_CODE}, #{IC_NAME_KOR}, #{IC_NAME_ENG}, #{IC_GUBUN} )
+    </insert>
+    <!-- 측정항목 수정 -->
+    <update id="updatemesureItem" parameterType="Map">
+        UPDATE IC_INFO
+        <set>
+        IC_NAME_KOR = #{IC_NAME_KOR},<!--품목명(한글)-->
+        IC_NAME_ENG = #{IC_NAME_ENG},<!--품목명(영어)-->
+        IC_GUBUN =   #{IC_GUBUN},<!--구분-->
+        </set>
+        WHERE IC_CODE = #{IC_CODE}<!--코드번호--> 
+    </update>    
+    <!-- 측정항목 삭제 -->
+    <delete id="deletemesureItem" parameterType="Map">
+        DELETE FROM IC_INFO
+        WHERE IC_CODE = #{IC_CODE}<!--코드번호-->  
+    </delete>
+    
+    
+    
+    
+    <!-- 지하수 측정망 조사지점 리스트 -->
+    <select id="getWaterSpotCrList" parameterType="Map" resultType="HashMap">
+        SELECT *
+        FROM
+        <choose>
+            <when test='pGubun == "C"'>V_TN_E03_INPUT </when><!-- 오염우려지역 -->
+            <otherwise>V_TN_G02_INPUT </otherwise><!-- 일반지역 -->
+        </choose>
+        WHERE
+        GWMYR       =  #{pGwmyr} 
+        AND GWMOD   =  #{pGwmod}  
+        ORDER BY
+        GIGWAN_NM ASC
+    </select>
+    
+    <!-- 지하수 측정망 조사지점 생성 -->
+    <insert id="insertWaterSpotCr" parameterType="Map">
+    
+        <choose>
+            <when test='pGubun == "C"'><!-- 오염우려지역 --> 
+                INSERT 
+                INTO
+                    TN_E03_INPUT_AT
+                    (ADMCODE,GWMYR,GWMOD,SPOT_STD_CODE,PT_NO,PT_NM,ADDR,CYONGDO,CDRINK,CHGBN,HIST,APPR_SAVE,APPR_CONF,EXAMGBN,INCON,X,Y,REMARKS,REGDATE,REGID) 
+                    SELECT
+                        ADMCODE,
+                        #{pGwmyr} ,
+                        #{pGwmod},
+                        SPOT_STD_CODE,
+                        TRIM(LEGACY_CODE_NO),
+                        SPOT_NM,
+                        NVL (AD.DO_NM,
+                        ADRES) || ' ' || AD.CTY_NM || ' ' || AD.DONG_NM || DECODE (AD.ADM_LVL,
+                        4,
+                        ' ',
+                        '') || AD.RI_NM || DECODE (AD.ADM_LVL,
+                        3,
+                        ' ',
+                        '') || DECODE (MNTN,
+                        2,
+                        '산',
+                        '')  || MNNM || CASE 
+                            WHEN SLNO IS NOT NULL THEN '-' 
+                        END || SLNO AS ADRES,
+                        CYONGDO,
+                        CDRINK,
+                        CHGBN,
+                        '1',
+                        '0',
+                        '0',
+                        '0',
+                        '' INCON,
+                        CRDNT_X,
+                        CRDNT_Y,
+                        REMARKS,
+                        SYSDATE,
+                        'cetech' 
+                    from
+                        TN_E03_SPOT_INFO a,
+                        COM_DISTRICT_RAW AD 
+                    WHERE
+                        ABL_AT='N' 
+                        AND SUBSTR (a.ADMCODE, 1, 10) = AD.ADM_CD(+)
+            </when>
+            <otherwise><!-- 일반지역 --> 
+            INSERT 
+            INTO
+                TN_G02_INPUT_AT
+                (ADMCODE,GWMYR,GWMOD,SPOT_STD_CODE,PT_NO,PT_NM,ADDR,CYONGDO,CDRINK,CHGBN,HIST,APPR_SAVE,APPR_CONF,EXAMGBN,INCON,X,Y,REMARKS,REGDATE,REGID) 
+                SELECT
+                    ADMCODE,
+                    #{pGwmyr} ,
+                    #{pGwmod},
+                    SPOT_STD_CODE,
+                    TRIM(LEGACY_CODE_NO),
+                    SPOT_NM,
+                    <!-- ADRES, -->
+                    (SELECT TRIM ( DO_NM || ' ' || CTY_NM || ' ' || DONG_NM || ' ' || RI_NM) ADM_NM FROM COM_DISTRICT_RAW WHERE ADM_CD = SUBSTR (A.ADMCODE, 1, 10)) || A.ADRES AS ADDRESS,
+                    CYONGDO,
+                    CDRINK,
+                    CHGBN,
+                    '1',
+                    '0',
+                    '0',
+                    '0',
+                    '' INCON,
+                    CRDNT_X,
+                    CRDNT_Y,
+                    REMARKS,
+                    SYSDATE,
+                    'cetech' 
+                from
+                    TN_G02_SPOT_INFO  A
+                WHERE
+                    ABL_AT='N' 
+            </otherwise>
+        </choose>
+    </insert>
+    
+    <!-- 토양 측정망 조사지점 리스트 -->
+    <select id="getSoilSpotCrList" parameterType="Map" resultType="HashMap">
+        SELECT *
+        FROM SMPT A, GIGWAN_CODE B, JIMOK_CODE C            
+        WHERE A.CONT_ORG    = B.GIGWAN_CD
+        AND TARGET_GBN      = 'SO' 
+        AND A.JIMOK         = C.JIMOK_CD  
+        AND SMYR            = #{pSmyr}   
+        ORDER BY GIGWAN_NM ASC
+    </select>
+    
+    
+    <!-- 토양 측정망 조사지점 생성 -->
+    <insert id="insertSoilSpotCr" parameterType="Map">
+        INSERT INTO SMPT(ADMCODE,SMYR,PT_NO,UNIQUE_NM,ADDR,JIMOK,AREA_1,CONT_ORG,HIST,APPR_SAVE,APPR_CONF,EXAMGBN,REMARKS,REGDATE,REGID) 
+            SELECT
+            ADMCODE,
+            #{NEXT_YEAR} SMYR,
+            PT_NO,
+            UNIQUE_NM,
+            ADDR,
+            JIMOK,
+            AREA_1,
+            CONT_ORG,
+            '1',
+            '0',
+            '0',
+            '0',
+            REMARKS,
+            SYSDATE,
+            'CETECH' 
+            FROM
+            SMPT 
+            WHERE
+            SMYR =  #{PRE_YEAR} 
+    </insert>
+    
+    
+    
+    
+    
+    
+    
+    
+
+	<!-- 측정망 입력기간 설정 -->
+	<select id="getMesureInputTmMnList" parameterType="Map" resultType="HashMap">
+		SELECT
+        TARGET_GBN, YEAR, 
+        TO_CHAR(START_DATE_H1, 'YYYY-MM-DD') START_DATE_H1,
+        TO_CHAR(END_DATE_H1, 'YYYY-MM-DD') END_DATE_H1,
+        TO_CHAR(START_DATE_H2, 'YYYY-MM-DD') START_DATE_H2, 
+        TO_CHAR(END_DATE_H2, 'YYYY-MM-DD') END_DATE_H2
+        FROM SETTING_ICPERIOD A, COM_VRIABL_TMPR B
+        WHERE TARGET_GBN = NVL(B.VRIABL_1_VALUE, 'GW') 
+        ORDER BY  YEAR DESC
+	</select>
+    <!-- 측정망 입력기간 상세 쿼리 -->
+    <select id="getMesureInputTmMn" parameterType="Map" resultType="HashMap">
+        SELECT A.*,
+        (CASE 
+         WHEN TO_NUMBER(TO_CHAR(SYSDATE,'YYYYMMDD')) BETWEEN TO_NUMBER(TO_CHAR(START_DATE_H1,'YYYYMMDD')) AND TO_NUMBER(TO_CHAR(END_DATE_H1,'YYYYMMDD')) THEN 'Y'
+         ELSE 'N'
+        END) UPD_CK 
+        FROM SETTING_ICPERIOD A
+        WHERE YEAR          = #{YEAR}
+        AND   TARGET_GBN    = #{TARGET_GBN}
+    </select>
+    <!-- 측정망 입력기간 등록 -->
+    <insert id="insertMesureInputTmMn" parameterType="Map">
+        INSERT INTO SETTING_ICPERIOD
+        (TARGET_GBN, YEAR, START_DATE_H1, END_DATE_H1, START_DATE_H2, END_DATE_H2)
+        VALUES
+        (#{TARGET_GBN}, #{YEAR}, TO_DATE(#{START_DATE_H1},'YYYY-MM-DD'), TO_DATE(#{END_DATE_H1},'YYYY-MM-DD'), TO_DATE(#{START_DATE_H2},'YYYY-MM-DD'), TO_DATE(#{END_DATE_H2},'YYYY-MM-DD'))
+    </insert>
+    <!-- 측정망 입력기간 수정 -->
+    <update id="updateMesureInputTmMn" parameterType="Map">
+        UPDATE SETTING_ICPERIOD
+        <set>
+        START_DATE_H1       = TO_DATE(#{START_DATE_H1},'YYYY-MM-DD'),
+        END_DATE_H1         = TO_DATE(#{END_DATE_H1},'YYYY-MM-DD'),  
+        START_DATE_H2       = TO_DATE(#{START_DATE_H2},'YYYY-MM-DD'),
+        END_DATE_H2         = TO_DATE(#{END_DATE_H2},'YYYY-MM-DD'),
+        </set>
+        WHERE YEAR          = #{YEAR}  
+        AND TARGET_GBN    = #{TARGET_GBN} 
+    </update>    
+    <!-- 측정망 입력기간 삭제 -->
+    <delete id="deleteMesureInputTmMn" parameterType="Map">
+        DELETE FROM SETTING_ICPERIOD
+        WHERE YEAR          = #{YEAR}  
+        AND TARGET_GBN    = #{TARGET_GBN} 
+    </delete>
+    
+    
+    <!-- 골프장 농약관리 검색조건 -->
+    <sql id="golfCropMnWhere">
+        <if test="pUseCode != null and pUseCode !=''">
+        AND USE_CODE = #{pUseCode}
+        </if>
+        <if test="pUseYn != null and pUseYn !=''">
+        AND USE_YN = #{pUseYn}
+        </if>
+        <if test="pesticideName != null and pesticideName !=''">
+        AND PESTICIDE_NAME LIKE '%'||#{pesticideName}||'%'
+        </if>
+    </sql>
+    <!-- 골프장 농약관리 목록 -->
+    <select id="golfCropMnList" parameterType="Map" resultType="HashMap">
+        SELECT * FROM (
+            SELECT AA.*, ROWNUM RNUM
+                FROM (
+                SELECT                                                                                                   
+                NVL(PESTICIDE_NAME, '없음') AS PESTICIDE_NAME                                                            
+                , ( SELECT CODE_NAME FROM COMM_CODE WHERE CODE = A.SHAPE_CODE ) AS SHAPE_NAME                           
+                ,( SELECT CODE_NAME FROM COMM_CODE WHERE CODE = A.PLACE_CODE ) AS PLACE_NAME                             
+                ,( SELECT CODE_NAME FROM COMM_CODE WHERE CODE = A.PESTICIDE_GUBUN ) AS PESTICIDE_GUBUN_NM                             
+                ,REG_COMPANY                                                                                           
+                ,TO_CHAR(WRITE_DTTM , 'YYYY-MM-DD' ) AS WRITE_DTTM                                                     
+                ,MEM_ID                                                                                                
+                ,PESTICIDE_SEQ                                                                                        
+                ,(SELECT CODE_NAME FROM COMM_CODE  WHERE CODE = A.USE_CODE ) AS USE_NAME                                                                                               
+                ,PESTICIDE_NO                                                                                               
+                ,PESTICIDE_GUBUN                                                                                               
+                ,CROP_GUBUN
+                ,USE_YN                                                                                             
+                FROM GP_PESTICIDE A
+                WHERE 1 =1
+                <include refid="golfCropMnWhere"/>
+                ORDER BY PESTICIDE_NAME,SHAPE_CODE,PLACE_CODE,USE_NAME,REG_COMPANY,WRITE_DTTM,MEM_ID,PESTICIDE_SEQ
+                ) AA
+        )
+        WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+    </select>
+
+    <!-- 골프장 농약관리 총 카운트 -->
+    <select id="golfCropMnCount" parameterType="Map" resultType="int">
+        SELECT COUNT(*) CNT
+        FROM GP_PESTICIDE
+        WHERE 1 =1
+        <include refid="golfCropMnWhere"/>
+    </select>    
+    
+    <!-- 골프장 농약관리 상세보기 -->
+    <select id="getGolfCropMn" parameterType="Map" resultType="HashMap">
+        SELECT
+        *  
+        FROM GP_PESTICIDE A
+        WHERE PESTICIDE_SEQ = #{PESTICIDE_SEQ}
+        
+    </select>
+    
+    <!-- 골프장 농약관리 등록 -->
+    <insert id="insertGolfCropMn" parameterType="Map">
+        <selectKey resultType="int" keyProperty="PESTICIDE_SEQ" order="BEFORE">
+            SELECT NVL(MAX(PESTICIDE_SEQ),0)+1 FROM GP_PESTICIDE
+        </selectKey>        
+        <!-- 농약순번, 농약이름, 농약재형, 국내수입구분코드, 상세 수입국 정보, 작성일시, 작성자, 독성구분코드, 어독숭구분, 제조회사, 용도코드 (제초, 살균등등), 농약정보 파일명 (PDF작물보호협회), 농약등록번호, 농약구분, 작물구분,  -->
+        INSERT INTO GP_PESTICIDE 
+        ( PESTICIDE_SEQ, PESTICIDE_NAME, SHAPE_CODE, PLACE_CODE, IMPORT_COUNTRY, 
+        WRITE_DTTM, MEM_ID, POISON_CODE, FISH_TOXICITY_CODE, REG_COMPANY, 
+        USE_CODE, PES_FILE_NAME, PESTICIDE_NO, PESTICIDE_GUBUN, CROP_GUBUN, APPLC_DBYHS ) 
+        VALUES 
+        ( #{PESTICIDE_SEQ}, #{PESTICIDE_NAME}, #{SHAPE_CODE}, #{PLACE_CODE}, #{IMPORT_COUNTRY}, 
+        SYSDATE, #{gUserId}, #{POISON_CODE}, #{FISH_TOXICITY_CODE}, #{REG_COMPANY}, 
+        #{USE_CODE}, #{PES_FILE_NAME}, #{PESTICIDE_NO}, #{PESTICIDE_GUBUN}, #{CROP_GUBUN}, #{APPLC_DBYHS} )
+    </insert>
+
+    <!--골프장 농약관리 수정  -->
+    <update id="updateGolfCropMn" parameterType="Map">
+        UPDATE GP_PESTICIDE
+        <set>
+        PESTICIDE_NAME      = #{PESTICIDE_NAME},<!--농약이름-->
+        SHAPE_CODE          = #{SHAPE_CODE},<!--농약재형-->
+        PLACE_CODE          = #{PLACE_CODE},<!--국내수입구분코드-->
+        IMPORT_COUNTRY      = #{IMPORT_COUNTRY},<!--상세 수입국 정보-->
+        WRITE_DTTM          = SYSDATE,<!--작성일시-->
+        MEM_ID              = #{gUserId},<!--작성자-->
+        POISON_CODE         = #{POISON_CODE},<!--독성구분코드-->
+        FISH_TOXICITY_CODE  = #{FISH_TOXICITY_CODE},<!--어독숭구분-->
+        REG_COMPANY         = #{REG_COMPANY},<!--제조회사-->
+        USE_CODE            = #{USE_CODE},<!--용도코드 (제초, 살균등등)-->
+        PES_FILE_NAME       = #{PES_FILE_NAME},<!--농약정보 파일명 (PDF작물보호협회)-->
+        PESTICIDE_NO        = #{PESTICIDE_NO},<!--농약등록번호-->
+        PESTICIDE_GUBUN     = #{PESTICIDE_GUBUN},<!--농약구분-->
+        CROP_GUBUN          = #{CROP_GUBUN},<!--작물구분-->
+        APPLC_DBYHS         = #{APPLC_DBYHS},<!---->
+        </set>
+        WHERE PESTICIDE_SEQ = #{PESTICIDE_SEQ}
+    </update>
+
+    <!-- 골프장 농약관리 삭제 -->
+    <delete id="deleteGolfCropMn" parameterType="Map">
+        DELETE FROM GP_PESTICIDE 
+        WHERE PESTICIDE_SEQ = #{PESTICIDE_SEQ}
+    </delete>
+    
+    
+    
+    <!-- 성분조회 목록 검색조건 -->
+    <sql id="cropIngredientWhere">
+        <if test="searchWord != null and searchWord !=''">
+            <if test='searchType == "KO"'>
+            AND INGREDIENTS_KOR_NAME LIKE '%'||#{searchWord}||'%'
+            </if>
+            <if test='searchType == "ENG"'>
+            AND INGREDIENTS_ENG_NAME LIKE '%'||#{searchWord}||'%'
+            </if>
+        </if>
+        <if test='searchGo == "ㄱ"'><![CDATA[AND ASCII(GI.INGREDIENTS_KOR_NAME) >= COL1 AND ASCII(GI.INGREDIENTS_KOR_NAME) < COL2]]></if>
+        <if test='searchGo == "ㄴ"'><![CDATA[AND ASCII(GI.INGREDIENTS_KOR_NAME) >= COL2 AND ASCII(GI.INGREDIENTS_KOR_NAME) < COL3]]></if>
+        <if test='searchGo == "ㄷ"'><![CDATA[AND ASCII(GI.INGREDIENTS_KOR_NAME) >= COL3 AND ASCII(GI.INGREDIENTS_KOR_NAME) < COL4]]></if>
+        <if test='searchGo == "ㄹ"'><![CDATA[AND ASCII(GI.INGREDIENTS_KOR_NAME) >= COL4 AND ASCII(GI.INGREDIENTS_KOR_NAME) < COL5]]></if>
+        <if test='searchGo == "ㅁ"'><![CDATA[AND ASCII(GI.INGREDIENTS_KOR_NAME) >= COL5 AND ASCII(GI.INGREDIENTS_KOR_NAME) < COL6]]></if>
+        <if test='searchGo == "ㅂ"'><![CDATA[AND ASCII(GI.INGREDIENTS_KOR_NAME) >= COL6 AND ASCII(GI.INGREDIENTS_KOR_NAME) < COL7]]></if>
+        <if test='searchGo == "ㅅ"'><![CDATA[AND ASCII(GI.INGREDIENTS_KOR_NAME) >= COL7 AND ASCII(GI.INGREDIENTS_KOR_NAME) < COL8]]></if>
+        <if test='searchGo == "ㅇ"'><![CDATA[AND ASCII(GI.INGREDIENTS_KOR_NAME) >= COL8 AND ASCII(GI.INGREDIENTS_KOR_NAME) < COL9]]></if>
+        <if test='searchGo == "ㅈ"'><![CDATA[AND ASCII(GI.INGREDIENTS_KOR_NAME) >= COL9 AND ASCII(GI.INGREDIENTS_KOR_NAME) < COL10]]></if>
+        <if test='searchGo == "ㅊ"'><![CDATA[AND ASCII(GI.INGREDIENTS_KOR_NAME) >= COL10 AND ASCII(GI.INGREDIENTS_KOR_NAME) < COL11]]></if>
+        <if test='searchGo == "ㅋ"'><![CDATA[AND ASCII(GI.INGREDIENTS_KOR_NAME) >= COL11 AND ASCII(GI.INGREDIENTS_KOR_NAME) < COL12]]></if>
+        <if test='searchGo == "ㅌ"'><![CDATA[AND ASCII(GI.INGREDIENTS_KOR_NAME) >= COL12 AND ASCII(GI.INGREDIENTS_KOR_NAME) < COL13]]></if>
+        <if test='searchGo == "ㅍ"'><![CDATA[AND ASCII(GI.INGREDIENTS_KOR_NAME) >= COL13 AND ASCII(GI.INGREDIENTS_KOR_NAME) < COL14]]></if>
+        <if test='searchGo == "ㅎ"'><![CDATA[AND ASCII(GI.INGREDIENTS_KOR_NAME) >= COL14 AND ASCII(GI.INGREDIENTS_KOR_NAME) < COL15]]></if>
+    </sql>
+    <!-- 성분조회 목록 -->
+    <select id="cropIngredientList" parameterType="Map" resultType="HashMap">
+        WITH VIEW_KEY_DATA AS (                  SELECT
+            ASCII('가') AS COL1                   ,
+            ASCII('나') AS COL2                   ,
+            ASCII('다') AS COL3                   ,
+            ASCII('라') AS COL4                   ,
+            ASCII('마') AS COL5                   ,
+            ASCII('바') AS COL6                   ,
+            ASCII('사') AS COL7                   ,
+            ASCII('아') AS COL8                   ,
+            ASCII('자') AS COL9                   ,
+            ASCII('차') AS COL10                  ,
+            ASCII('카') AS COL11                  ,
+            ASCII('타') AS COL12                  ,
+            ASCII('파') AS COL13                  ,
+            ASCII('하') AS COL14                  ,
+            99999 AS COL15                        
+        FROM
+            DUAL                                     )                                         SELECT
+            *                    
+        FROM
+            (            SELECT
+                A.*                ,
+                ROWNUM AS RNUM         
+            FROM
+                (            SELECT
+                    GI.INGREDIENTS_KOR_NAME                   ,
+                    GI.INGREDIENTS_ENG_NAME                   ,
+                    TO_CHAR(GI.WRITE_DTTM ,
+                    'YYYY-MM-DD') AS WRITE_DTTM                ,
+                    GI.MEM_ID                   ,
+                    GI.INGREDIENTS_SEQ                   
+                FROM
+                    VIEW_KEY_DATA VKD                         ,
+                    GP_INGREDIENTS GI                     
+                WHERE
+                    RESIDUE_FLAG = 'Y'     
+                    <include refid="cropIngredientWhere"/>                                
+                ORDER BY
+                    INGREDIENTS_KOR_NAME                      ) A                                       ) B                                       
+            WHERE
+                B.RNUM BETWEEN #{startRow} AND #{endRow}
+    </select>
+    <!-- 성분조회 총 카운트 -->
+    <select id="cropIngredientCount" parameterType="Map" resultType="int"> 
+    SELECT COUNT(*) FROM(
+        WITH VIEW_KEY_DATA AS (                  SELECT
+            ASCII('가') AS COL1                   ,
+            ASCII('나') AS COL2                   ,
+            ASCII('다') AS COL3                   ,
+            ASCII('라') AS COL4                   ,
+            ASCII('마') AS COL5                   ,
+            ASCII('바') AS COL6                   ,
+            ASCII('사') AS COL7                   ,
+            ASCII('아') AS COL8                   ,
+            ASCII('자') AS COL9                   ,
+            ASCII('차') AS COL10                  ,
+            ASCII('카') AS COL11                  ,
+            ASCII('타') AS COL12                  ,
+            ASCII('파') AS COL13                  ,
+            ASCII('하') AS COL14                  ,
+            99999 AS COL15                        
+        FROM
+            DUAL                                     )                                         SELECT
+            *                    
+        FROM
+            (            SELECT
+                A.*                ,
+                ROWNUM AS RNUM         
+            FROM
+                (            SELECT
+                    GI.INGREDIENTS_KOR_NAME                   ,
+                    GI.INGREDIENTS_ENG_NAME                   ,
+                    TO_CHAR(GI.WRITE_DTTM ,
+                    'YYYY-MM-DD') AS WRITE_DTTM                ,
+                    GI.MEM_ID                   ,
+                    GI.INGREDIENTS_SEQ                   
+                FROM
+                    VIEW_KEY_DATA VKD                         ,
+                    GP_INGREDIENTS GI                     
+                WHERE
+                    RESIDUE_FLAG = 'Y'     
+                    <include refid="cropIngredientWhere"/>                                
+                ORDER BY
+                    INGREDIENTS_KOR_NAME                      ) A                                       ) B                                       
+            )
+    </select>    
+    
+    <!-- 골프장 주성분 목록 -->
+    <select id="cropMainIngredientList" parameterType="Map" resultType="HashMap">
+        SELECT                                     
+        GI.INGREDIENTS_KOR_NAME                    
+        , GI.INGREDIENTS_ENG_NAME                  
+        , GPI.INGREDIENTS_PER                      
+        , GPI.INGREDIENTS_CFU                      
+        , GPI.INGREDIENTS_SEQ                      
+        , GPI.VALID_CODE                           
+        , GPI.CONTENT                              
+        FROM                                       
+        GP_INGREDIENTS GI                          
+        ,   GP_PESTICIDE_INGREDIENTS GPI           
+        WHERE                                      
+        GI.INGREDIENTS_SEQ = GPI.INGREDIENTS_SEQ   
+        AND                                        
+        GPI.PESTICIDE_SEQ = #{PESTICIDE_SEQ} 
+        ORDER BY GI.INGREDIENTS_KOR_NAME 
+    </select>
+    
+    <!--주성분 삭제  -->
+    <delete id="deleteCropMainIngredient" parameterType="Map">
+        DELETE FROM GP_PESTICIDE_INGREDIENTS
+        WHERE PESTICIDE_SEQ = #{PESTICIDE_SEQ}
+    </delete>
+    <!--주성분 저장  -->
+    <insert id="insertCropMainIngredient" parameterType="Map">
+        <!-- 성분함량, 작성일시, , 농약순번, 비고, 성분순번, ,  -->
+        INSERT INTO GP_PESTICIDE_INGREDIENTS 
+        ( INGREDIENTS_PER, WRITE_DTTM, MEM_ID, PESTICIDE_SEQ, CONTENT, INGREDIENTS_SEQ, VALID_CODE, INGREDIENTS_CFU )
+        VALUES ( #{INGREDIENTS_PER}, SYSDATE, #{gUserId}, #{PESTICIDE_SEQ}, #{CONTENT}, #{INGREDIENTS_SEQ}, #{VALID_CODE}, #{INGREDIENTS_CFU} )
+    </insert>
+    
+    <!-- 농약 사용유무 변경 -->
+    <update id="updateGolfCropUseYnMn" parameterType="Map">
+        UPDATE GP_PESTICIDE SET USE_YN = #{USE_YN}
+        WHERE PESTICIDE_SEQ = #{PESTICIDE_SEQ}
+    </update>
+    
+    
+    <!-- 골프장 입력기한 목록 -->
+    <select id="getGolfInputTmMnList" parameterType="Map" resultType="HashMap">
+        SELECT * FROM (
+            SELECT AA.*, ROWNUM RNUM
+                FROM (
+                SELECT 
+                YEAR, HALF_CODE, 
+                TO_CHAR(TO_DATE(START_DATE,'YYYYMMDD'), 'YYYY-MM-DD') START_DATE,
+                TO_CHAR(TO_DATE(END_DATE,'YYYYMMDD'), 'YYYY-MM-DD') END_DATE,
+                GUBUN_CODE, WRITE_DTTM, MEM_ID, SEC_MEM_ID,
+                DECODE(HALF_CODE,'01','상반기','02','하반기','') HALF_NM,
+                (SELECT CODE_NAME FROM COMM_CODE WHERE SUPER_CODE = 'CM010000' AND CODE = A.GUBUN_CODE) GUBUN_NM
+                FROM GP_RESEARCH_DATE A
+                WHERE GUBUN_CODE = #{pGubunCode} 
+                <if test="pYear != null and pYear !=''">
+                AND YEAR = #{pYear}
+                </if>
+                ORDER BY YEAR DESC, HALF_CODE ASC
+                ) AA
+        )
+        WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+    </select>
+
+    <!-- 골프장 입력기한 총 카운트 -->
+    <select id="getGolfInputTmMnCount" parameterType="Map" resultType="int">
+        SELECT COUNT(*) CNT
+        FROM GP_RESEARCH_DATE
+        WHERE GUBUN_CODE = #{pGubunCode}
+        <if test="pYear != null and pYear !=''">
+        AND YEAR = #{pYear}
+        </if> 
+    </select>    
+    
+    <!-- 골프장 입력기한 상세보기 -->
+    <select id="getGolfInputTmMn" parameterType="Map" resultType="HashMap">
+        SELECT
+        YEAR, HALF_CODE, 
+        TO_CHAR(TO_DATE(START_DATE,'YYYYMMDD'), 'YYYY-MM-DD') START_DATE,
+        TO_CHAR(TO_DATE(END_DATE,'YYYYMMDD'), 'YYYY-MM-DD') END_DATE,
+        GUBUN_CODE, WRITE_DTTM, MEM_ID, SEC_MEM_ID,
+        DECODE(HALF_CODE,'01','상반기','02','하반기','') HALF_NM,
+        (SELECT CODE_NAME FROM COMM_CODE WHERE SUPER_CODE = 'CM010000' AND CODE = A.GUBUN_CODE) GUBUN_NM,
+        (CASE 
+         WHEN TO_NUMBER(TO_CHAR(SYSDATE,'YYYYMMDD')) BETWEEN TO_NUMBER(REPLACE(START_DATE,'-')) AND TO_NUMBER(REPLACE(END_DATE,'-')) THEN 'Y'
+         ELSE 'N'
+        END) UPD_CK
+        FROM GP_RESEARCH_DATE A
+        WHERE GUBUN_CODE    = #{GUBUN_CODE}
+        AND HALF_CODE       = #{HALF_CODE}
+        AND YEAR            = #{YEAR}  
+        
+    </select>
+    
+    <!-- 골프장 입력기한 등록 -->
+    <insert id="insertGolfInputTmMn" parameterType="Map">
+        <!-- 연도, 반기, 입력시작일, 입력마감일, 사용량잔류량구분, 설정일자, 설정자,  -->
+        INSERT INTO GP_RESEARCH_DATE 
+        ( YEAR, HALF_CODE, START_DATE, END_DATE, GUBUN_CODE, WRITE_DTTM, MEM_ID<!-- , SEC_MEM_ID --> )
+        VALUES ( #{YEAR}, #{HALF_CODE}, REPLACE(#{startDay},'-',''), REPLACE(#{endDay},'-',''), #{GUBUN_CODE}, SYSDATE, #{gUserId}<!-- , #{gUserId} --> )
+    </insert>
+
+    <!--골프장 입력기한 수정  -->
+    <update id="updateGolfInputTmMn" parameterType="Map">
+        UPDATE GP_RESEARCH_DATE
+        <set>
+        START_DATE      = REPLACE(#{startDay},'-',''),<!--입력시작일-->
+        END_DATE        = REPLACE(#{endDay},'-',''),<!--입력마감일-->
+        WRITE_DTTM      = SYSDATE,<!--설정일자-->
+        MEM_ID          = #{gUserId},<!--설정자-->
+        <!-- SEC_MEM_ID      = #{gUserId}, --><!---->
+        </set>
+        WHERE GUBUN_CODE    = #{GUBUN_CODE}
+        AND HALF_CODE       = #{HALF_CODE}
+        AND YEAR            = #{YEAR}  
+    </update>
+
+    <!-- 골프장 입력기한 삭제 -->
+    <delete id="deleteGolfInputTmMn" parameterType="Map">
+        DELETE FROM GP_RESEARCH_DATE 
+        WHERE GUBUN_CODE    = #{GUBUN_CODE}
+        AND HALF_CODE       = #{HALF_CODE}
+        AND YEAR            = #{YEAR}  
+    </delete>
+    <!-- 골프장 입력기한 년도 콤보박스용 -->
+    <select id="getGolfInputTmMnCombo" parameterType="Map" resultType="HashMap">
+        SELECT YEAR, YEAR||''||HALF_CODE AS YH_CODE                                                             
+        , YEAR||'년 /'||DECODE(HALF_CODE , '01' , '상반기' , '02' , '하반기') AS YH_NAME, HALF_CODE            
+        FROM GP_RESEARCH_DATE                                                                                 
+        WHERE START_DATE &lt; TO_CHAR(SYSDATE , 'YYYYMMDD')
+        GROUP BY YEAR, HALF_CODE                                                                             
+        ORDER BY YH_NAME DESC                                
+    </select>
+    
+</mapper>

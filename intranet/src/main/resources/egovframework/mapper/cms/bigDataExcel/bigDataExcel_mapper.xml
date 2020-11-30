@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 대용량 엑셀 쿼리 모음 -->
+<mapper namespace="bigDataExcelMapper">
+    <!--
+    메뉴명    :
+    메뉴경로  :
+    쿼리설명  :
+    작성자    : 
+     -->
+    <select id="getWorkPlaceList" parameterType="Map" resultType="java.util.LinkedHashMap">
+        <!-- SELECT BBS_NO, BBS_NM, BBS_DC, BBS_TY, UPLOAD_POSBL_AT, UPLOAD_LMTT_CO, UPLOAD_POSBL_SIZE, WBDETR_USE_AT, SCRSNT_USE_AT, NTCSNT_USE_AT, ANSWER_USE_AT FROM COM_BBS -->
+        SELECT USER_ID, USER_NM, PASSWORD, AUTHOR_CODE, BRTHDY FROM COM_USER
+    </select>
+    <!--
+    메뉴명    : 회원목록
+    메뉴경로  :
+    쿼리설명  : 회원목록
+    작성자    : 
+     -->
+    <select id="getMemberList" parameterType="Map" resultType="java.util.LinkedHashMap">
+        SELECT  
+        ROWNUM, USER_ID, USER_NM, EMAIL, TELNO, MBTLNUM ,F_GET_CODE_NM('50',AUTHOR_CODE) AUTHOR_CODE_NM ,F_GET_CODE_NM('53',USE_AT) USE_AT_NM , TO_CHAR(REGIST_DT,'YYYY-MM-DD') REGIST_DT 
+        FROM    COM_USER A
+        WHERE 1 = 1
+        <if test="pUserId != null and pUserId !=''">
+			AND <![CDATA[USER_ID like '%'||#{pUserId}||'%']]>
+		</if>
+		<if test="pUserNm != null and pUserNm !=''">
+			AND <![CDATA[USER_NM like '%'||#{pUserNm}||'%']]>
+		</if>
+		<if test="pAuth != null and pAuth !=''">
+			AND <![CDATA[AUTHOR_CODE = #{pAuth}]]>
+		</if>
+		<if test="pUseAt != null and pUseAt !=''">
+			AND <![CDATA[USE_AT = #{pUseAt}]]>
+		</if>
+    </select>
+</mapper>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- SELECT * FROM ( SELECT A.*, ROWNUM RNUM FROM (
+  ) A ) WHERE RNUM BETWEEN #{startRow} AND #{endRow} -->
+<mapper namespace="expMapper">
+
+  <select id="getListCount" parameterType="Map" resultType="int">
+  		<![CDATA[
+  		SELECT COUNT(*) FROM (
+  		
+  		SELECT EXPENSE_ID , USER_NM,  EXPENSE_DATE ,STEP , '' as submityn FROM (
+				SELECT 
+					SIGN_ID , LINE_ID  , SIGN_YN , V.EXPENSE_ID , USER_NM , EXPENSE_DATE, submityn,
+					NVL( (SELECT SL.SIGN_YN FROM SIGN_LINE SL WHERE SL.SIGN_ID = S.SIGN_ID AND SL.SIGN_ORDER = (S.SIGN_ORDER-1)) , 'Y')AS PRESIGN,
+					F_GET_CODE_NM('219',SIGN_YN) AS STEP
+				FROM SIGN_LINE S , EXPENSE V
+				WHERE V.EXPENSE_ID = SIGN_ID 
+      			AND S.LINE_ID=#{gUserId}
+	  			) WHERE SIGN_YN = 'N'
+	  			AND PRESIGN='Y'  
+	  			AND SUBMITYN='Y'
+  		  UNION ALL 
+		 SELECT 
+		 	   EXPENSE_ID , USER_NM, EXPENSE_DATE,DECODE( SUBMITYN , 'N','임시저장') AS SUBMITYN,
+		 	   CASE WHEN
+		 	   		COUNT(*) =  COUNT( DECODE(SIGN_YN,'Y',1)  ) THEN '결재 완료'
+		 	   		when
+		 	   		COUNT( DECODE(SIGN_YN,'R',1)  ) > 0 THEN  '반려'
+		 	   		ELSE
+		 	   		 '결재 대기'
+		 	   	END AS STEP	 
+		  FROM EXPENSE V , SIGN_LINE S  
+		 WHERE 
+			  V.EXPENSE_ID = S.SIGN_ID
+		   AND REGISTER=#{gUserId}
+		 GROUP BY EXPENSE_ID , USER_NM , EXPENSE_DATE , SUBMITYN
+  		
+  		)
+		]]>
+  </select>
+  <select id="getList" parameterType="Map" resultType="HashMap">
+  <![CDATA[
+  		SELECT * FROM ( SELECT A.*, ROWNUM RNUM FROM (
+  		SELECT ROWNUM AS RS , EXPENSE_ID ,  USER_NM ,SUBMITYN, STEP ,EXPENSE_DATE FROM (
+  		SELECT EXPENSE_ID , USER_NM,  EXPENSE_DATE ,  '' as SUBMITYN ,STEP FROM (
+				SELECT 
+					SIGN_ID , LINE_ID  , SIGN_YN , V.EXPENSE_ID , USER_NM , EXPENSE_DATE, submityn,
+					NVL( (SELECT SL.SIGN_YN FROM SIGN_LINE SL WHERE SL.SIGN_ID = S.SIGN_ID AND SL.SIGN_ORDER = (S.SIGN_ORDER-1)) , 'Y')AS PRESIGN,
+					F_GET_CODE_NM('219',SIGN_YN) AS STEP
+				FROM SIGN_LINE S , EXPENSE V
+				WHERE V.EXPENSE_ID = SIGN_ID 
+      			AND S.LINE_ID=#{gUserId}
+	  			) WHERE SIGN_YN = 'N'
+	  			AND PRESIGN='Y'  
+	  			AND SUBMITYN='Y'
+  		  UNION ALL 
+		 SELECT 
+		 	   EXPENSE_ID , USER_NM, EXPENSE_DATE,DECODE( SUBMITYN , 'N','임시저장') AS SUBMITYN,
+		 	   CASE WHEN
+		 	   		COUNT(*) =  COUNT( DECODE(SIGN_YN,'Y',1)  ) THEN '결재 완료'
+		 	   		when
+		 	   		COUNT( DECODE(SIGN_YN,'R',1)  ) > 0 THEN  '반려'
+		 	   		ELSE
+		 	   		 '결재 대기'
+		 	   	END AS STEP	 
+		  FROM EXPENSE V , SIGN_LINE S  
+		 WHERE 
+			  V.EXPENSE_ID = S.SIGN_ID
+		   AND REGISTER=#{gUserId}
+		 GROUP BY EXPENSE_ID , USER_NM , EXPENSE_DATE , SUBMITYN
+  		
+  		)
+		 ) A ) WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+		]]>
+  </select>
+  
+  <insert id="insert" parameterType="Map">
+	  <selectKey resultType="string" keyProperty="EXPENSE_ID" order="BEFORE">
+				SELECT 'EXP_'||#{gUserId}||'_'||#{EXPENSE_DATE} AS EXPENSE_ID FROM DUAL
+	  </selectKey>
+			INSERT INTO EXPENSE
+					(EXPENSE_ID, USER_NM, ORG, AUTH, EXPENSE_DATE, BANK, REGIST_DATE, REGISTER , SUBMITYN )
+			  VALUES(#{EXPENSE_ID},#{USER_NM},#{ORG},#{AUTH},#{EXPENSE_DATE},#{BANK},SYSDATE,#{gUserId} , #{SUBMITYN})
+  </insert>
+  <delete id="deleteExpenseList" parameterType="Map">
+  	DELETE FROM EXPENSELIST
+		WHERE EXPENSE_ID = #{EXPENSE_ID}
+	</delete>
+  <insert id="insertLine" parameterType="Map">
+  	INSERT INTO SIGN_LINE
+			(SIGN_ID, LINE_ID, SIGN_YN, SIGN_ORDER)
+	VALUES(#{EXPENSE_ID},#{LINE_ID},'N',#{SIGN_ORDER})
+  </insert>
+  <insert id="insertExpenseList" parameterType="Map">
+  	INSERT INTO EXPENSELIST
+	(
+	EXPENSE_ID, EXPENSE_LIST_ID, COASTNM, COAST, NOTE, REGIST_DATE, REGISTER
+	)
+	VALUES(
+	#{EXPENSE_ID},#{EXPENSE_LIST_ID},#{COASTNM},#{COAST},#{NOTE},SYSDATE,#{gUserId}
+	)
+  </insert>
+  
+  <select id="getMemberList" parameterType="Map" resultType="HashMap">
+		SELECT USER_ID , USER_NM||' '||F_GET_CODE_NM('50',AUTHOR_CODE) AS USERNM
+		FROM COM_USER
+		WHERE AUTHOR_CODE!=9999
+		  AND USER_ID != #{gUserId}
+  </select>
+  <select id="getMember"  parameterType="Map" resultType="HashMap">
+	  SELECT 
+			F_GET_CODE_NM('206',ORG_CODE) AS ORG,
+			F_GET_CODE_NM('50',AUTHOR_CODE) AS AUTH,
+			DECODE(MBTLNUM ,'--',TELNO , MBTLNUM) AS PNUM,
+			USER_NM
+			FROM COM_USER
+		WHERE
+			USER_ID = #{gUserId}
+  </select>
+  <select id="getSignCheck"  parameterType="Map" resultType="HashMap">
+		SELECT EXPENSE_ID, USER_NM, ORG, AUTH, EXPENSE_DATE, BANK, REGIST_DATE, REGISTER, UPDATE_DATE, UPDATER,
+			   DECODE(REGISTER ,#{gUserId}, 'SELF' , 'SIGN' ) AS E_MODE,
+	   		   (SELECT COUNT(*) FROM SIGN_LINE WHERE SIGN_YN='N' AND SIGN_ID =  #{EXPENSE_ID} ) AS SIGN_COUNT
+		 FROM EXPENSE
+		WHERE EXPENSE_ID = #{EXPENSE_ID}
+  </select>
+  <select id="getSignLineList" parameterType="Map" resultType="HashMap">
+	  SELECT 
+			LINE_ID , USER_NM ,  
+			F_GET_CODE_NM('219',SIGN_YN) AS SIGN_STEP,
+			F_GET_CODE_NM('50',AUTHOR_CODE) AS AUTO_NM
+		FROM SIGN_LINE , COM_USER		
+		WHERE
+			SIGN_ID = #{EXPENSE_ID}
+		AND LINE_ID = USER_ID
+		ORDER BY SIGN_ORDER
+  </select>	
+	<update id="update" parameterType="Map">
+		UPDATE EXPENSE SET 
+			USER_NM=#{USER_NM}, 
+			ORG=#{ORG}, 
+			AUTH=#{AUTH}, 
+			EXPENSE_DATE=#{EXPENSE_DATE}, 
+			BANK=#{BANK}, 
+			UPDATE_DATE=SYSDATE, 
+			UPDATER=#{gUserId},
+			SUBMITYN=#{SUBMITYN}
+		WHERE EXPENSE_ID=#{EXPENSE_ID}
+	</update>	
+	<delete id="deleteLine" parameterType="Map">
+		DELETE FROM SIGN_LINE WHERE SIGN_ID = #{EXPENSE_ID}
+	</delete>
+	<delete id="deleteVac" parameterType="Map">
+		DELETE FROM EXPENSE WHERE EXPENSE_ID = #{EXPENSE_ID}
+	</delete>
+	<update id="sign" parameterType="Map">
+		UPDATE SIGN_LINE SET
+				SIGN_YN = #{SIGN_YN},
+				SIGN_DT = SYSDATE
+		 WHERE
+				SIGN_ID = #{EXPENSE_ID} 
+			AND LINE_ID = #{gUserId}
+	</update>
+	<select id="getExpenseList" parameterType="Map" resultType="HashMap">
+		SELECT EXPENSE_ID, EXPENSE_LIST_ID, COASTNM, COAST, NOTE, REGIST_DATE, REGISTER
+		FROM EXPENSELIST
+		WHERE EXPENSE_ID = #{EXPENSE_ID}
+		ORDER BY EXPENSE_LIST_ID 
+	</select>
+</mapper>
